@@ -1,9 +1,18 @@
-_site/
-*.sw[po]
-*.~vsd
-\#*\#
-*~
+# npm
+package-lock.json
+node_modules
+report.*
+# yarn
+yarn.lock
+yar-error.log
+# vscode
+.vscode
+
+# vuepress
+docs/.vuepress/dist
+
+# 百度链接推送
+urls.txt
+
+# mac
 .DS_Store
-Gemfile.lock
-.vscode/
-.jekyll-metadata
