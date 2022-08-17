@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM是如何实现反射的？ | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/36.f1893ee4.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/48.41c4fd1e.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/50.2404cf28.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/54.2499d935.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/58.a8c06b55.js"><link rel="prefetch" href="/assets/js/59.37d62779.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>Java虚拟机基本原理</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/f2e80b/" class="sidebar-link">Java代码是怎么运行的？</a></li><li><a href="/pages/6e6e40/" class="sidebar-link">Java的基本类型</a></li><li><a href="/pages/7d8aa1/" class="sidebar-link">Java虚拟机是如何加载Java类的</a></li><li><a href="/pages/e90758/" class="sidebar-link">JVM是如何执行方法调用的？（上）</a></li><li><a href="/pages/f8e553/" class="sidebar-link">JVM是如何执行方法调用的？（下）</a></li><li><a href="/pages/fe4d39/" class="sidebar-link">JVM是如何处理异常的？</a></li><li><a href="/pages/fc5957/" aria-current="page" class="active sidebar-link">JVM是如何实现反射的？</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/fc5957/#反射调用的实现" class="sidebar-link">反射调用的实现</a></li><li class="sidebar-sub-header level2"><a href="/pages/fc5957/#反射调用的开销" class="sidebar-link">反射调用的开销</a></li><li class="sidebar-sub-header level2"><a href="/pages/fc5957/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/fc5957/#附录-反射-api-简介" class="sidebar-link">附录：反射 API 简介</a></li><li class="sidebar-sub-header level2"><a href="/pages/fc5957/#精选留言-46" class="sidebar-link">精选留言(46)</a></li></ul></li><li><a href="/pages/3119a5/" class="sidebar-link">JVM是怎么实现invokedynamic的？（上）</a></li><li><a href="/pages/03cdad/" class="sidebar-link">JVM是怎么实现invokedynamic的？（下）</a></li><li><a href="/pages/9c8181/" class="sidebar-link">Java对象的内存布局</a></li><li><a href="/pages/9735ec/" class="sidebar-link">垃圾回收（上）</a></li><li><a href="/pages/8055d4/" class="sidebar-link">垃圾回收（下）</a></li></ul></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>高效编译</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>代码优化</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" title="分类" data-v-06225672>Java虚拟机基本原理</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABH1JREFUSA3tVl1oHFUUPmdmd2ltklqbpJDiNnXFmgbFktho7YMPNiJSSZM0+CAYSkUELVhM6YuwIPpgoOKDqOBDC0XE2CQoNtQXBUFTTcCi+Wlh1V2TQExsUzcltd3M9Tt3ZjZzZ2fT+OJTL8yeM+eee757fmeJbq//KQL8X3DUSFOcfr7cRsRtxNQMWueeVzOkaITIGqQHNg5y8+jNW9ldM7A6nTpAjuolUikAwq7CE3WcM2RRDz+XGVgN3FptU/aUSlvq9Pa3iZ1+sgAqJyyAFqkipd9dqiwHF3P65YycLWc/6sqGrvoEoIp6DOFaX5h6+dnfjkWprwqsPk0dUGq5vySwDImC10KxFHgGL1SWoc92O3eVht09qdXNH11I2SsTsJYqMWzihqGMi+A+Garf3BAuuLI5oGlULyNfyB/HYNujwktOfRrMr5t77NmevqaUopx0grnKAyvVpmwUDB4x6FPXuGvYLTDwWsejwgtgkYKPqRJg8SV6xaiZ3ZTppGneS4yfH5/66fZSDHv+QZci/+h5c5UHtpy67JUqGppM0sh0Nc1dW6/N1W5Yoqat8/TU/VnadmdeW2PLLSyh0cvxBs3KbqTmwYPpxN4do/mzE8nEpvX/UMu2Wbp74zUAK5q6WkHns7V0eWkdPbPzd3rxkTGybadYySumVzhcaJFbs5UrEkQ/+CK8gF5dnh/6ciIZ73gwQ927L1IitoxKLXYP3SjYdOrHHfTZhRRlFyrorafPk20B3HPD1y2G3qKZME5Jcf3t/HUC13/8tSd++vqFveMUTwAUxSUFI1QekR1+bIze3D9MF2aq6cPvG72CgnldWCFqyRw3lwH8ZMerjTD9ElRO7Gv44wNpC90aASqGfVlz/Rx17srQ57/UU26hkhQqUB7dBR71WmzQhHUnblGmVOEw0jhbV1n9OlXUDCIRGaNV5Jp43N516fN7JmnTHdfp7Hgy0luO4aMhtkLL8Bi3bUWYvzh5Mn1dTxrL6QmGuRhGL/TiTTxRoEdTszSaq9GR0NGA3KdkOz3hqSV3MIDhQ5IVX/Ivx3umBti2es2h4eZby7x8br1rkf7Mo90AqC8aQ3sJeNzqFRu+vSANAQe3PL7l0HGOAdwDCeZYvNKeoZp1Qfs6Aipndh86HmFRi0LAnEO47wsqM6cdfjh3jBPUzhZy7nvlUfFsamED1VQt6aISHVymXZ/B2aCtIG8AI8xfobj2d3en1wWVhOeHELKmLQ1s211s88comkv4UCwWyF787mJdYXtNfhKAXVqnKTq8QZvGAGGOfaTo5pGZ/PwbUCr5+DPr/1J92JNHr9aOl/F3iI5+O1nfybsGxoimvZ3ViWSluDITw3P37mypheDIPY0tw7+O/5ApbkYw+zpfaUVu32Pi98+defdUhEpZkRFq0aqyNh9FuL9hpYbEm6iwi0z2REd09ZmyENEbuhjDWzKvZXTqKYaBIr3tt5kuPtQBZFvEUwHt60vfCNu41XsksH9Ij1BMMz1Y0OOunHNShFIP5868g5zeXmuLwL9T4b6Q2+KejgAAAABJRU5ErkJggg==">JVM是如何实现反射的？<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_07-jvm是如何实现反射的"><a href="#_07-jvm是如何实现反射的" class="header-anchor">#</a> 07 | JVM是如何实现反射的？</h1> <p>今天我们来聊聊 Java 里的反射机制。</p> <p>反射是 Java 语言中一个相当重要的特性，它允许正在运行的 Java 程序观测，甚至是修改程序的动态行为。</p> <p>举例来说，我们可以通过 Class 对象枚举该类中的所有方法，我们还可以通过 Method.setAccessible（位于  java.lang.reflect 包，该方法继承自 AccessibleObject）绕过 Java  语言的访问权限，在私有方法所在类之外的地方调用该方法。</p> <p>反射在 Java 中的应用十分广泛。开发人员日常接触到的 Java 集成开发环境（IDE）便运用了这一功能：每当我们敲入点号时，IDE 便会根据点号前的内容，动态展示可以访问的字段或者方法。</p> <p>另一个日常应用则是 Java 调试器，它能够在调试过程中枚举某一对象所有字段的值。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531133734763-0bb22d.png" alt="image-20220531133734763"></p> <p>（图中 eclipse 的自动提示使用了反射）</p> <p>在 Web 开发中，我们经常能够接触到各种可配置的通用框架。为了保证框架的可扩展性，它们往往借助 Java 的反射机制，根据配置文件来加载不同的类。举例来说，Spring 框架的依赖反转（IoC），便是依赖于反射机制。</p> <p>然而，我相信不少开发人员都嫌弃反射机制比较慢。甚至是甲骨文关于反射的教学网页 [1]，也强调了反射性能开销大的缺点。</p> <p>今天我们便来了解一下反射的实现机制，以及它性能糟糕的原因。如果你对反射 API 不是特别熟悉的话，你可以查阅我放在文稿末尾的附录。</p> <h2 id="反射调用的实现"><a href="#反射调用的实现" class="header-anchor">#</a> 反射调用的实现</h2> <p>首先，我们来看看方法的反射调用，也就是 Method.invoke，是怎么实现的。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public final class Method extends Executable {
+
+  ...
+
+  public Object invoke(Object obj, Object... args) throws ... {
+
+    ... // 权限检查
+
+    MethodAccessor ma = methodAccessor;
+
+    if (ma == null) {
+
+      ma = acquireMethodAccessor();
+
+    }
+
+    return ma.invoke(obj, args);
+
+  }
+
+}
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>如果你查阅 Method.invoke 的源代码，那么你会发现，它实际上委派给 MethodAccessor 来处理。MethodAccessor  是一个接口，它有两个已有的具体实现：一个通过本地方法来实现反射调用，另一个则使用了委派模式。为了方便记忆，我便用“本地实现”和“委派实现”来指代这两者。</p> <p>每个 Method 实例的第一次反射调用都会生成一个委派实现，它所委派的具体实现便是一个本地实现。本地实现非常容易理解。当进入了 Java 虚拟机内部之后，我们便拥有了 Method 实例所指向方法的具体地址。这时候，反射调用无非就是将传入的参数准备好，然后调用进入目标方法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// v0 版本
+
+import java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    new Exception(&quot;#&quot; + i).printStackTrace();
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+    method.invoke(null, 0);
+
+  }
+
+}
+
+ 
+
+# 不同版本的输出略有不同，这里我使用了 Java 10。
+
+$ java Test
+
+java.lang.Exception: #0
+
+        at Test.target(Test.java:5)
+
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl .invoke0(Native Method)
+
+ a      t java.base/jdk.internal.reflect.NativeMethodAccessorImpl. .invoke(NativeMethodAccessorImpl.java:62)
+
+ t       java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.i .invoke(DelegatingMethodAccessorImpl.java:43)
+
+        java.base/java.lang.reflect.Method.invoke(Method.java:564)
+
+  t        Test.main(Test.java:131
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div></div><p>为了方便理解，我们可以打印一下反射调用到目标方法时的栈轨迹。在上面的 v0 版本代码中，我们获取了一个指向 Test.target 方法的 Method 对象，并且用它来进行反射调用。在 Test.target 中，我会打印出栈轨迹。</p> <p>可以看到，反射调用先是调用了 Method.invoke，然后进入委派实现（DelegatingMethodAccessorImpl），再然后进入本地实现（NativeMethodAccessorImpl），最后到达目标方法。</p> <p>这里你可能会疑问，为什么反射调用还要采取委派实现作为中间层？直接交给本地实现不可以么？</p> <p>其实，Java 的反射调用机制还设立了另一种动态生成字节码的实现（下称动态实现），直接使用 invoke 指令来调用目标方法。之所以采用委派实现，便是为了能够在本地实现以及动态实现中切换。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// 动态实现的伪代码，这里只列举了关键的调用逻辑，其实它还包括调用者检测、参数检测的字节码。
+
+package jdk.internal.reflect;
+
+ 
+
+public class GeneratedMethodAccessor1 extends ... {
+
+  @Overrides    
+
+  public Object invoke(Object obj, Object[] args) throws ... {
+
+    Test.target((int) args[0]);
+
+    return null;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>动态实现和本地实现相比，其运行效率要快上 20 倍 <a href="http://hg.openjdk.java.net/jdk10/jdk10/jdk/file/777356696811/src/java.base/share/classes/jdk/internal/reflect/ReflectionFactory.java#l80" target="_blank" rel="noopener noreferrer">2<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 。这是因为动态实现无需经过 Java 到 C++ 再到 Java 的切换，但由于生成字节码十分耗时，仅调用一次的话，反而是本地实现要快上 3 到 4 倍 <a href="http://hg.openjdk.java.net/jdk10/jdk10/jdk/file/777356696811/src/java.base/share/classes/jdk/internal/reflect/ReflectionFactory.java#l78" target="_blank" rel="noopener noreferrer">3<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</p> <p>考虑到许多反射调用仅会执行一次，Java 虚拟机设置了一个阈值 15（可以通过  -Dsun.reflect.inflationThreshold= 来调整），当某个反射调用的调用次数在 15 之下时，采用本地实现；当达到  15 时，便开始动态生成字节码，并将委派实现的委派对象切换至动态实现，这个过程我们称之为 Inflation。</p> <p>为了观察这个过程，我将刚才的例子更改为下面的 v1 版本。它会将反射调用循环 20 次。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// v1 版本
+
+import java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    new Exception(&quot;#&quot; + i).printStackTrace();
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+    for (int i = 0; i &lt; 20; i++) {
+
+      method.invoke(null, i);
+
+    }
+
+  }
+
+}
+
+ 
+
+# 使用 -verbose:class 打印加载的类
+
+$ java -verbose:class Test
+
+...
+
+java.lang.Exception: #14
+
+        at Test.target(Test.java:5)
+
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl .invoke0(Native Method)
+
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl .invoke(NativeMethodAccessorImpl.java:62)
+
+        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl .invoke(DelegatingMethodAccessorImpl.java:43)
+
+        at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+
+        at Test.main(Test.java:12)
+
+[0.158s][info][class,load] ...
+
+...
+
+[0.160s][info][class,load] jdk.internal.reflect.GeneratedMethodAccessor1 source: __JVM_DefineClass__
+
+java.lang.Exception: #15
+
+       at Test.target(Test.java:5)
+
+       at java.base/jdk.internal.reflect.NativeMethodAccessorImpl .invoke0(Native Method)
+
+       at java.base/jdk.internal.reflect.NativeMethodAccessorImpl .invoke(NativeMethodAccessorImpl.java:62)
+
+       at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl .invoke(DelegatingMethodAccessorImpl.java:43)
+
+       at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+
+       at Test.main(Test.java:12)
+
+java.lang.Exception: #16
+
+       at Test.target(Test.java:5)
+
+       at jdk.internal.reflect.GeneratedMethodAccessor1 .invoke(Unknown Source)
+
+       at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl .invoke(DelegatingMethodAccessorImpl.java:43)
+
+       at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+
+       at Test.main(Test.java:12)
+
+...
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br></div></div><p>可以看到，在第 15 次（从 0 开始数）反射调用时，我们便触发了动态实现的生成。这时候，Java 虚拟机额外加载了不少类。其中，最重要的当属  GeneratedMethodAccessor1（第 30 行）。并且，从第 16 次反射调用开始，我们便切换至这个刚刚生成的动态实现（第 40 行）。</p> <p>反射调用的 Inflation 机制是可以通过参数（-Dsun.reflect.noInflation=true）来关闭的。这样一来，在反射调用一开始便会直接生成动态实现，而不会使用委派实现或者本地实现。</p> <h2 id="反射调用的开销"><a href="#反射调用的开销" class="header-anchor">#</a> 反射调用的开销</h2> <p>下面，我们便来拆解反射调用的性能开销。</p> <p>在刚才的例子中，我们先后进行了 Class.forName，Class.getMethod 以及 Method.invoke  三个操作。其中，Class.forName 会调用本地方法，Class.getMethod  则会遍历该类的公有方法。如果没有匹配到，它还将遍历父类的公有方法。可想而知，这两个操作都非常费时。</p> <p>值得注意的是，以 getMethod 为代表的查找方法操作，会返回查找得到结果的一份拷贝。因此，我们应当避免在热点代码中使用返回 Method 数组的 getMethods 或者 getDeclaredMethods 方法，以减少不必要的堆空间消耗。</p> <p>在实践中，我们往往会在应用程序中缓存 Class.forName 和 Class.getMethod 的结果。因此，下面我就只关注反射调用本身的性能开销。</p> <p>为了比较直接调用和反射调用的性能差距，我将前面的例子改为下面的 v2 版本。它会将反射调用循环二十亿次。此外，它还将记录下每跑一亿次的时间。</p> <p>我将取最后五个记录的平均值，作为预热后的峰值性能。（注：这种性能评估方式并不严谨，我会在专栏的第三部分介绍如何用 JMH 来测性能。）</p> <p>在我这个老笔记本上，一亿次直接调用耗费的时间大约在 120ms。这和不调用的时间是一致的。其原因在于这段代码属于热循环，同样会触发即时编译。并且，即时编译会将对 Test.target 的调用内联进来，从而消除了调用的开销。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// v2 版本
+
+mport java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    // 空方法
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+ 
+
+    long current = System.currentTimeMillis();
+
+    for (int i = 1; i &lt;= 2_000_000_000; i++) {
+
+      if (i % 100_000_000 == 0) {
+
+        long temp = System.currentTimeMillis();
+
+        System.out.println(temp - current);
+
+        current = temp;
+
+      }
+
+ 
+
+      method.invoke(null, 128);
+
+    }
+
+  }
+
+}
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br></div></div><p>下面我将以 120ms 作为基准，来比较反射调用的性能开销。</p> <p>由于目标方法 Test.target 接收一个 int 类型的参数，因此我传入 128 作为反射调用的参数，测得的结果约为基准的 2.7 倍。我们暂且不管这个数字是高是低，先来看看在反射调用之前字节码都做了什么。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+   59: aload_2                         // 加载 Method 对象
+
+   60: aconst_null                     // 反射调用的第一个参数 null
+
+   61: iconst_1
+
+   62: anewarray Object                // 生成一个长度为 1 的 Object 数组
+
+   65: dup
+
+   66: iconst_0
+
+   67: sipush 128
+
+   70: invokestatic Integer.valueOf    // 将 128 自动装箱成 Integer
+
+   73: aastore                         // 存入 Object 数组中
+
+   74: invokevirtual Method.invoke     // 反射调用
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>这里我截取了循环中反射调用编译而成的字节码。可以看到，这段字节码除了反射调用外，还额外做了两个操作。</p> <p>第一，由于 Method.invoke 是一个变长参数方法，在字节码层面它的最后一个参数会是 Object 数组（感兴趣的同学私下可以用  javap 查看）。Java 编译器会在方法调用处生成一个长度为传入参数数量的 Object 数组，并将传入参数一一存储进该数组中。</p> <p>第二，由于 Object 数组不能存储基本类型，Java 编译器会对传入的基本类型参数进行自动装箱。</p> <p>这两个操作除了带来性能开销外，还可能占用堆内存，使得 GC 更加频繁。（如果你感兴趣的话，可以用虚拟机参数 -XX:+PrintGC 试试。）那么，如何消除这部分开销呢？</p> <p>关于第二个自动装箱，Java 缓存了 [-128, 127] 中所有整数所对应的 Integer 对象。当需要自动装箱的整数在这个范围之内时，便返回缓存的 Integer，否则需要新建一个 Integer 对象。</p> <p>因此，我们可以将这个缓存的范围扩大至覆盖 128（对应参数
+-Djava.lang.Integer.IntegerCache.high=128），便可以避免需要新建 Integer 对象的场景。</p> <p>或者，我们可以在循环外缓存 128 自动装箱得到的 Integer 对象，并且直接传入反射调用中。这两种方法测得的结果差不多，约为基准的 1.8 倍。</p> <p>现在我们再回来看看第一个因变长参数而自动生成的 Object 数组。既然每个反射调用对应的参数个数是固定的，那么我们可以选择在循环外新建一个 Object 数组，设置好参数，并直接交给反射调用。改好的代码可以参照文稿中的 v3 版本。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// v3 版本
+
+import java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    // 空方法
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+ 
+
+    Object[] arg = new Object[1]; // 在循环外构造参数数组
+
+    arg[0] = 128;
+
+ 
+
+    long current = System.currentTimeMillis();
+
+    for (int i = 1; i &lt;= 2_000_000_000; i++) {
+
+      if (i % 100_000_000 == 0) {
+
+        long temp = System.currentTimeMillis();
+
+        System.out.println(temp - current);
+
+        current = temp;
+
+      }
+
+ 
+
+      method.invoke(null, arg);
+
+    }
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br></div></div><p>测得的结果反而更糟糕了，为基准的 2.9 倍。这是为什么呢？</p> <p>如果你在上一步解决了自动装箱之后查看运行时的 GC 状况，你会发现这段程序并不会触发 GC。其原因在于，原本的反射调用被内联了，从而使得即时编译器中的逃逸分析将原本新建的 Object 数组判定为不逃逸的对象。</p> <p>如果一个对象不逃逸，那么即时编译器可以选择栈分配甚至是虚拟分配，也就是不占用堆空间。具体我会在本专栏的第二部分详细解释。</p> <p>如果在循环外新建数组，即时编译器无法确定这个数组会不会中途被更改，因此无法优化掉访问数组的操作，可谓是得不偿失。</p> <p>到目前为止，我们的最好记录是 1.8 倍。那能不能再进一步提升呢？</p> <p>刚才我曾提到，可以关闭反射调用的 Inflation  机制，从而取消委派实现，并且直接使用动态实现。此外，每次反射调用都会检查目标方法的权限，而这个检查同样可以在 Java  代码里关闭，在关闭了这两项机制之后，也就得到了我们的 v4 版本，它测得的结果约为基准的 1.3 倍。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+ 
+
+// v4 版本
+
+import java.lang.reflect.Method;
+
+ 
+
+// 在运行指令中添加如下两个虚拟机参数：
+
+// -Djava.lang.Integer.IntegerCache.high=128
+
+// -Dsun.reflect.noInflation=true
+
+public class Test {
+
+  public static void target(int i) {
+
+    // 空方法
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+    method.setAccessible(true);  // 关闭权限检查
+
+ 
+
+    long current = System.currentTimeMillis();
+
+    for (int i = 1; i &lt;= 2_000_000_000; i++) {
+
+      if (i % 100_000_000 == 0) {
+
+        long temp = System.currentTimeMillis();
+
+        System.out.println(temp - current);
+
+        current = temp;
+
+      }
+
+ 
+
+      method.invoke(null, 128);
+
+    }
+
+  }
+
+}
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br></div></div><p>到这里，我们基本上把反射调用的水分都榨干了。接下来，我来把反射调用的性能开销给提回去。</p> <p>首先，在这个例子中，之所以反射调用能够变得这么快，主要是因为即时编译器中的方法内联。在关闭了 Inflation 的情况下，内联的瓶颈在于 Method.invoke 方法中对 MethodAccessor.invoke 方法的调用。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531133747834-97c84f.png" alt="image-20220531133747834"></p> <p>我会在后面的文章中介绍方法内联的具体实现，这里先说个结论：在生产环境中，我们往往拥有多个不同的反射调用，对应多个 GeneratedMethodAccessor，也就是动态实现。</p> <p>由于 Java 虚拟机的关于上述调用点的类型 profile（注：对于 invokevirtual 或者  invokeinterface，Java 虚拟机会记录下调用者的具体类型，我们称之为类型  profile）无法同时记录这么多个类，因此可能造成所测试的反射调用没有被内联的情况。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// v5 版本
+
+import java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    // 空方法
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+    method.setAccessible(true);  // 关闭权限检查
+
+    polluteProfile();
+
+ 
+
+    long current = System.currentTimeMillis();
+
+    for (int i = 1; i &lt;= 2_000_000_000; i++) {
+
+      if (i % 100_000_000 == 0) {
+
+        long temp = System.currentTimeMillis();
+
+        System.out.println(temp - current);
+
+        current = temp;
+
+      }
+
+ 
+
+      method.invoke(null, 128);
+
+    }
+
+  }
+
+ 
+
+  public static void polluteProfile() throws Exception {
+
+    Method method1 = Test.class.getMethod(&quot;target1&quot;, int.class);
+
+    Method method2 = Test.class.getMethod(&quot;target2&quot;, int.class);
+
+    for (int i = 0; i &lt; 2000; i++) {
+
+      method1.invoke(null, 0);
+
+      method2.invoke(null, 0);
+
+    }
+
+  }
+
+  public static void target1(int i) { }
+
+  public static void target2(int i) { }
+
+}
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br></div></div><p>在上面的 v5 版本中，我在测试循环之前调用了 polluteProfile 的方法。该方法将反射调用另外两个方法，并且循环上 2000 遍。</p> <p>而测试循环则保持不变。测得的结果约为基准的 6.7 倍。也就是说，只要误扰了 Method.invoke 方法的类型 profile，性能开销便会从 1.3 倍上升至 6.7 倍。</p> <p>之所以这么慢，除了没有内联之外，另外一个原因是逃逸分析不再起效。这时候，我们便可以采用刚才 v3 版本中的解决方案，在循环外构造参数数组，并直接传递给反射调用。这样子测得的结果约为基准的 5.2 倍。</p> <p>除此之外，我们还可以提高 Java 虚拟机关于每个调用能够记录的类型数目（对应虚拟机参数  -XX:TypeProfileWidth，默认值为 2，这里设置为 3）。最终测得的结果约为基准的 2.8 倍，尽管它和原本的 1.3  倍还有一定的差距，但总算是比 6.7 倍好多了。</p> <h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我介绍了 Java 里的反射机制。</p> <p>在默认情况下，方法的反射调用为委派实现，委派给本地实现来进行方法调用。在调用超过 15 次之后，委派实现便会将委派对象切换至动态实现。这个动态实现的字节码是自动生成的，它将直接使用 invoke 指令来调用目标方法。</p> <p>方法的反射调用会带来不少性能开销，原因主要有三个：变长参数方法导致的 Object 数组，基本类型的自动装箱、拆箱，还有最重要的方法内联。</p> <p>今天的实践环节，你可以将最后一段代码中 polluteProfile 方法的两个 Method  对象，都改成获取名字为“target”的方法。请问这两个获得的 Method 对象是同一个吗（==）？他们 equal  吗（.equals(…)）？对我们的运行结果有什么影响？</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+import java.lang.reflect.Method;
+
+ 
+
+public class Test {
+
+  public static void target(int i) {
+
+    // 空方法
+
+  }
+
+ 
+
+  public static void main(String[] args) throws Exception {
+
+    Class&lt;?&gt; klass = Class.forName(&quot;Test&quot;);
+
+    Method method = klass.getMethod(&quot;target&quot;, int.class);
+
+    method.setAccessible(true);  // 关闭权限检查
+
+    polluteProfile();
+
+ 
+
+    long current = System.currentTimeMillis();
+
+    for (int i = 1; i &lt;= 2_000_000_000; i++) {
+
+      if (i % 100_000_000 == 0) {
+
+        long temp = System.currentTimeMillis();
+
+        System.out.println(temp - current);
+
+        current = temp;
+
+      }
+
+ 
+
+      method.invoke(null, 128);
+
+    }
+
+  }
+
+ 
+
+  public static void polluteProfile() throws Exception {
+
+    Method method1 = Test.class.getMethod(&quot;target&quot;, int.class);
+
+    Method method2 = Test.class.getMethod(&quot;target&quot;, int.class);
+
+    for (int i = 0; i &lt; 2000; i++) {
+
+      method1.invoke(null, 0);
+
+      method2.invoke(null, 0);
+
+    }
+
+  }
+
+  public static void target1(int i) { }
+
+  public static void target2(int i) { }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br></div></div><h2 id="附录-反射-api-简介"><a href="#附录-反射-api-简介" class="header-anchor">#</a> 附录：反射 API 简介</h2> <p>通常来说，使用反射 API 的第一步便是获取 Class 对象。在 Java 中常见的有这么三种。</p> <ol><li>使用静态方法 Class.forName 来获取。</li> <li>调用对象的 getClass() 方法。</li> <li>直接用类名 +“.class”访问。对于基本类型来说，它们的包装类型（wrapper classes）拥有一个名为“TYPE”的 final 静态字段，指向该基本类型对应的 Class 对象。</li></ol> <p>例如，Integer.TYPE 指向 int.class。对于数组类型来说，可以使用类名 +“[ ].class”来访问，如 int[ ].class。</p> <p>除此之外，Class 类和 java.lang.reflect 包中还提供了许多返回 Class 对象的方法。例如，对于数组类的 Class 对象，调用 Class.getComponentType() 方法可以获得数组元素的类型。</p> <p>一旦得到了 Class 对象，我们便可以正式地使用反射功能了。下面我列举了较为常用的几项。</p> <ol><li>使用 newInstance() 来生成一个该类的实例。它要求该类中拥有一个无参数的构造器。</li> <li>使用 isInstance(Object) 来判断一个对象是否该类的实例，语法上等同于 instanceof 关键字（JIT 优化时会有差别，我会在本专栏的第二部分详细介绍）。</li> <li>使用 Array.newInstance(Class,int) 来构造该类型的数组。</li> <li>使用 getFields()/getConstructors()/getMethods() 来访问该类的成员。除了这三个之外，Class  类还提供了许多其他方法，详见 <a href="https://docs.oracle.com/javase/tutorial/reflect/class/classMembers.html" target="_blank" rel="noopener noreferrer">4<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。需要注意的是，方法名中带 Declared 的不会返回父类的成员，但是会返回私有成员；而不带  Declared 的则相反。</li></ol> <p>当获得了类成员之后，我们可以进一步做如下操作。</p> <ul><li>使用 Constructor/Field/Method.setAccessible(true) 来绕开 Java 语言的访问限制。</li> <li>使用 Constructor.newInstance(Object[]) 来生成该类的实例。</li> <li>使用 Field.get/set(Object) 来访问字段的值。</li> <li>使用 Method.invoke(Object, Object[]) 来调用方法。</li></ul> <p>有关反射 API 的其他用法，可以参考 reflect 包的 javadoc <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/reflect/package-summary.html" target="_blank" rel="noopener noreferrer">5<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> ，这里就不详细展开了。</p> <p>[1] :  https://docs.oracle.com/javase/tutorial/reflect/</p> <h2 id="精选留言-46"><a href="#精选留言-46" class="header-anchor">#</a> 精选留言(46)</h2> <ul><li></li></ul> <p>志远</p> <p>2018-08-06</p> <p>24</p> <p>老师您好，提个建议，您讲课过程中经常提到一些概念名词，您讲课总是预设了一个前提，就是假设我们已经知道那个概念，然而并不清楚。比如本文中被不断提到的内联，什么是内联呢？</p> <p>作者回复: 谢谢建议！方法内联指的是编译器在编译一个方法时，将某个方法调用的目标方法也纳入编译范围内，并用其返回值替代原方法调用这么个过程。</p> <ul><li></li></ul> <p>xiaguangme</p> <p>2018-08-06</p> <p>20</p> <p>开发人员日常接触到的 Java 集成开发环境（IDE）便运用了这一功能：每当我们敲入点号时，IDE 便会根据点号前的内容，动态展示可以访问的字段或者方法。//这个应该是不完全正确的，大部分应该是靠语法树来实现的。</p> <p>作者回复: 谢谢指出！</p> <ul><li></li></ul> <p>godtrue</p> <p>2018-08-07</p> <p>10</p> <p>小结
+1:反射机制是Java语言的一个非常重要的特性，通过这个特性，我们能够动态的监控、调用、修改类的行为，许多的框架实现就用到了Java语言反射的机制</p> <p>2:使用反射挺好的，但它也是不完美的，复杂的操作往往更耗时间和精力，使用反射也是一样，性能低下是她所被人诟病的一个地方，那为什么方法的反射如此耗费性能呐？它的性能耗在那里呢？方法的反射调用会带来不少性能开销，原因主要有三个：变长参数方法导致的 Object 数组，基本类型的自动装箱、拆箱，还有最重要的方法内联。</p> <ul><li></li></ul> <p>李杰</p> <p>2018-08-06</p> <p>9</p> <p>当某个反射调用的调用次数在 15 之下时，采用本地实现；当达到 15 时，便开始动态生成字节码...
+———可以认为第16次反射调用时的耗时是最长的吗？</p> <p>作者回复: 动态生成发生在第15次(从0开始数的话)，所以第15次比较耗时。</p> <ul><li></li></ul> <p>Kisho</p> <p>2018-08-06</p> <p>4</p> <p>郑老师，你好,
+“动态实现无需经过Java到C++再到Java的切换”,这句话没太明白，能在解释下么？</p> <p>作者回复: 在v0版本中我贴了一段stacktrace，你可以看到中间有个native method，这就是C++代码，也就是它先调用至这个C++代码，在C++代码里面再调用至Java代码。</p> <ul><li></li></ul> <p>Stephen</p> <p>2018-11-03</p> <p>3</p> <p>老师，有三个知识点不太明白:内联、逃逸分析以及inflation机制</p> <ul><li></li></ul> <p>ext4</p> <p>2018-08-06</p> <p>3</p> <p>雨迪您好，我有两个问题：</p> <p>一是我自己的测试结果和文章中有些出入。在我自己的mac+jdk10环境中，v3版本的代码和v2版本性能是差不多的，多次测试看v3还略好一些。从v2的GC log来看for循环的每一亿次iteration中间都会有GC发生，似乎说明这里的escape analysis并没有做到allocation on stack。您能想到这是什么原因么？另有个小建议就是文章中提到测试结果时，注明一下您的环境。</p> <p>另一个问题是在您v5版本的代码中，您故意用method1和method2两个对象霸占了2个ProfileType的位子，导致被测的反射操作性能很低。这是因为此处invoke方法的inline是压根儿就没有做呢？还是因为inline是依据target1或者target2来做的，而实际运行时发现类型不一致又触发了deoptimization呢？</p> <p>望解答，谢谢~</p> <p>作者回复: 多谢建议，我也是mac+jdk10。我这边裸跑v2是2.7x(因为每次要新建整数对象所以有GC)，加大整数缓存后跑v2是1.8x(无GC)。你是否忘了加大整数缓存？</p> <p>第二个问题，研究得很深！Method.invoke一直会被内联，但是它里面的MethodAccesor.invoke则不一定。</p> <p>实际上，在C2编译之前循环代码已经运行过非常多次，也就是说MethodAccesor.invoke已经看到多次调用至target()的动态实现。在profile里会显示为有target1，有target2，但是profile不完整，即还有一大部分的调用者类型没有记录。</p> <p>这时候C2会选择不inline这个MethodAccesor.invoke调用，直接做虚调用。</p> <ul><li></li></ul> <p>godtrue</p> <p>2018-08-06</p> <p>3</p> <p>老师请教个问题，如果手动修改某个Java字节码文件，如果JVM不重新加载此文件，有什么方式能让JVM识别并执行修改的内容呢？
+如果一定需要JVM加载后才能识别并执行，有什么好的手动触发的方法呢？</p> <p>作者回复: 你可以搜一下class redefinition的相关资料。我以前用cagent做过，Javaagent应该也可以。</p> <ul><li></li></ul> <p>life is ...</p> <p>2018-10-06</p> <p>2</p> <p>总结一下
+反射有两种实现方式：</p> <p>本地方法调用（就是字节码中已经定义好的方法）</p> <p>动态生成字节码</p> <p>两者有什么区别？</p> <p>动态生成字节码（以下简称动态实现），生成字节码的过程很慢（类似于准备工作），但是执行效率高。</p> <p>本地方法调用，不用生成字节码，直接调用本地方法。所以准备工作几乎没有，很快。但是执行效率就差很多。</p> <p>JVM如何做决定选择哪种实现方式？</p> <p>通过反射执行的次数来决定，默认值是15。15次之前直接本地调用，之后动态实现。</p> <p>JVM为啥分两种实现方式？</p> <p>本地实现的调用流程复杂。而在执行多次的情况下，复杂意味着性能损耗，所以有一种适合多次执行的解决方案，就是动态生成字节码。</p> <ul><li></li></ul> <p>godtrue</p> <p>2018-08-06</p> <p>2</p> <p>JVM加载了一个Java字节码文件，在不停止JVM的情况下能再次的加载同一个Java字节码文件吗？如果能是覆盖了原来的那个Java字节码文件还是怎么着了呢？
+在IDE中是可以直接修改Java源代码的，然后可以手动触发Java源代码的编译和重新加载，请问老师知道IDE是怎么实现的吗？</p> <ul><li></li></ul> <p>Yoph</p> <p>2018-11-13</p> <p>1</p> <p>MethodAccessor实例创建在ReflectionFactory中，如下代码：
+public class ReflectionFactory {<br>
+private static boolean noInflation        = false;<br>
+private static int     inflationThreshold = 15;</p> <div class="language- extra-class"><pre><code>public MethodAccessor newMethodAccessor(Method method) {  
+  checkInitted();  
+  if (noInflation) {  
+    return new MethodAccessorGenerator().  
+      generateMethod(method.getDeclaringClass(),  
+              method.getName(),  
+              method.getParameterTypes(),  
+              method.getReturnType(),  
+              method.getExceptionTypes(),  
+              method.getModifiers());  
+  } else {  
+    NativeMethodAccessorImpl acc =  
+      new NativeMethodAccessorImpl(method);  
+    DelegatingMethodAccessorImpl res =  
+      new DelegatingMethodAccessorImpl(acc);  
+    acc.setParent(res);  
+    return res;  
+  }  
+}  
+</code></pre></div><p>}</p> <p>实际的MethodAccessor实现有两个版本，一个是Java实现的，另一个是native code实现的。</p> <ul><li></li></ul> <p>小鳄鱼</p> <p>2018-11-12</p> <p>1</p> <p>不是同个对象，但equal。老师说了，返回的是目标方法的一份拷贝</p> <ul><li></li></ul> <p>Stephen</p> <p>2018-11-03</p> <p>1</p> <p>老师，有三个知识点不太明白，分别是:内联、逃逸分析以及inflation机制</p> <p>作者回复: 内联和逃逸分析后面有两篇会专门介绍，反射的inflation机制是当反射被频繁调用时，动态生成一个类来做直接调用的机制，可以加速反射调用</p> <ul><li></li></ul> <p>vick</p> <p>2018-09-08</p> <p>1</p> <p>请教一个问题，本地实现可以用java来替代c++的实现方式吗？这样就可以避过C++的额外开销？</p> <p>作者回复: 之所以叫本地实现，就是因为它用的C++代码。如果用Java来实现，就不会这么叫啦 😃</p> <p>JVM有用Java来替代的实现方式，也就是文中介绍的动态实现。它是根据反射调用的目标方法来动态生成字节码的。</p> <ul><li></li></ul> <p>once</p> <p>2018-09-07</p> <p>1</p> <p>请问老师 是不是本地方法的性能一般都不是很好呢</p> <p>作者回复: 需要经过JNI，所以性能很不好。</p> <p>不过即时编译器可能会将某些指定的本地方法调用给替换掉。这些特定的本地方法叫intrinsics，下周一会讲。</p> <ul><li></li></ul> <p>沉淀的梦想</p> <p>2018-08-18</p> <p>1</p> <p>在v5版本中，为什么我设置TypeProfileWidth为3，速度并没有变快呢？</p> <p>作者回复: 可以再增大到8试试。</p> <ul><li></li></ul> <p>小明</p> <p>2018-08-17</p> <p>1</p> <p>可以看看这篇博客 有详细的生成动态调用的解释<br>
+http://rednaxelafx.iteye.com/blog/548536</p> <ul><li></li></ul> <p>志远</p> <p>2018-08-06</p> <p>1</p> <p>文章中“一亿次直接调用耗费的时间大约在 120ms。这和不调用的时间是一致的。”这句话是不是病句啊？不调用指的是什么？指的是直接调用吗？</p> <p>作者回复: 多谢指出！不调用就是字面意思，不做任何调用，也就是除了每一亿次调用的打印语句之外，循环就不包含其它东西了。</p> <ul><li></li></ul> <p>Ennis LM</p> <p>2018-08-06</p> <p>1</p> <p>最后的问题，==是false，equals是true，对性能的影响我不知道怎么看。。。</p> <ul><li></li></ul> <p>西兹兹</p> <p>2019-04-19</p> <p>&quot;无法同时记录这么多个类&quot;，老师好，
+这个问题我看了第5、7课，还是不大理解这个profile是什么意思；
+是虚拟机里每一个类/接口都默认有2个profile记住？<br>
+还是虚拟机全局只记录任意一个类/接口，总共才2个profile？</p> <p>假设是是虚拟机里每一个类/接口都默认有2个profile记住，
+如果一个类只有1个实现类，这个实现类有4个虚方法，那虚拟机如何决定只内联缓存哪2个方法？先调用先缓存？还是最后调用的缓存？</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/fe4d39/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">JVM是如何处理异常的？</div></a> <a href="/pages/3119a5/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">JVM是怎么实现invokedynamic的？（上）</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/fe4d39/" class="prev">JVM是如何处理异常的？</a></span> <span class="next"><a href="/pages/3119a5/">JVM是怎么实现invokedynamic的？（上）</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/36.f1893ee4.js" defer></script>
+  </body>
+</html>

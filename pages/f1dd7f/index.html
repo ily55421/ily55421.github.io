@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Java语法糖与Java编译器 | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/48.41c4fd1e.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/36.f1893ee4.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/50.2404cf28.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/54.2499d935.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/58.a8c06b55.js"><link rel="prefetch" href="/assets/js/59.37d62779.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Java虚拟机基本原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>高效编译</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/bf46c5/" class="sidebar-link">常用工具介绍</a></li><li><a href="/pages/02bc49/" class="sidebar-link">Java内存模型</a></li><li><a href="/pages/a695e3/" class="sidebar-link">Java虚拟机是怎么实现synchronized的？</a></li><li><a href="/pages/f1dd7f/" aria-current="page" class="active sidebar-link">Java语法糖与Java编译器</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#自动装箱与自动拆箱" class="sidebar-link">自动装箱与自动拆箱</a></li><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#泛型与类型擦除" class="sidebar-link">泛型与类型擦除</a></li><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#桥接方法" class="sidebar-link">桥接方法</a></li><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#其他语法糖" class="sidebar-link">其他语法糖</a></li><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/f1dd7f/#精选留言-11" class="sidebar-link">精选留言(11)</a></li></ul></li><li><a href="/pages/2de1d5/" class="sidebar-link">即时编译（上）</a></li><li><a href="/pages/b67e14/" class="sidebar-link">即时编译（下）</a></li><li><a href="/pages/438d91/" class="sidebar-link">即时编译器的中间表达形式</a></li><li><a href="/pages/661b6f/" class="sidebar-link">Java字节码（基础篇）</a></li><li><a href="/pages/ab7d29/" class="sidebar-link">方法内联（上）</a></li><li><a href="/pages/87a271/" class="sidebar-link">方法内联（下）</a></li><li><a href="/pages/f7b36c/" class="sidebar-link">HotSpot虚拟机的intrinsic</a></li><li><a href="/pages/2e8fbc/" class="sidebar-link">逃逸分析</a></li></ul></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>代码优化</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=%E9%AB%98%E6%95%88%E7%BC%96%E8%AF%91" title="分类" data-v-06225672>高效编译</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABKFJREFUSA3tVl1oFVcQnrMbrak3QUgkya1akpJYcrUtIqW1JvFBE9LiQ5v6JmJpolbMg32rVrhgoYK0QiMY6i9Y6EMaW5D+xFJaTYItIuK2Kr3+BJNwkxBj05sQY3b3nM6cs2dv9t7NT/vQJw/sndk5M/PNzJkzewGerP+pAmy+ON8lLzUJgA8ZYxYIYZmGYRnctDaWvJJAmTtfP1pvXsBCCPP8QFcCaRkZYACgDZFO4stNIcBCajEOlmmC9XpJ9bAGCaPaPmzPl32dvLSVu3BWCTQs0XQQ6g0DYgwLIoAZbBCdW/i+781o1VVlm/410mw4h06Y7bIPHNyWDyL4FHkX03Q8SrzNhZTZriieckWt7cL6MM85YcLpsi/7O9/iXFT6MswI0DmmpkSaJ0qLxFIm3+i1THHB3zmBH3PYx9CcykcLOeQVVa7QtdxTgQgEleX2AjHYfwA+2ddV77ruGoJUbhGDI09YSNXyMpUt5ylOzxgbUmtOp7NmbNt8v3arjTBfYELmLUV+M+nSawNNAUqpT3ClJWg5I3BLT+cGW/DXNGCa6tx1aakCGEigArTn4TDIPdrXXYKCZNrHLMCOEPvHBlLQ99s9eHB7EB6NTki73CVPQ2F5MSx/uRQixfmq7rK0wYD8w8E905bnPDfwoWs/rfv93NWN/ZfvwsLIU7A09gxECyISeGJkHAau98L97tuw7NXnoPyNF8FcYGLGKsOs0mN3OEyec9esGW/ZEl945dTP34wlR2FZVQWU1q0Cw8Tr7p+hgLLNL0FPxx/Q35mA8aEUrH6nCgwEl0tn7wUiZYJnNRh6DK4UH/k0lfyrsBKdPVv/AriGIQcEDQZ65LBAGe2Rzui9Ybjz7XUppz1/uKBbyVPGkN3ZAeC6hr0x7Nr38N5+EqkoOm17xpoqR9ohQF55ERSvr4Dkr3chNfC3DMzGJlNBElW8w9nsGQvhNGIzDkXzCg8cLK951xHsFBlTJspJNi3ZFIMF2AeDV3q8DNOB+YHi6QTrChDIWDBRi5U5f+ZMfJLu3ccrqxtdxk4SKH336LFxSmkqefwU5T8fhdSdQf9IVKD6aNiwI/hnmcAZ91isYMJIaCUCx9W098+LgruikeTqzqqxKPUwqJyCPJiyemVVZBOijDGjD38Os0jOiSPL1z3SPjXNANbiNPXAdzTfukjjuknNBbyz3nwgTd3AVFqUJ5hpHlq9MveLnWwttUfoygBmvVjuikxND3znrhsELnZk7k+OjIGxeNEkomyLVta0xxn+HZhjBc4YZ/AFjHjz9u3xRZl2BN4aq9nFwWh16IrQ1aHHEd3j1+4/dB9OtH4e29A2H1DyHQRmOSfQZ1Fy7MHBTGB6J/Djq6p3OxyO2cB+4Car7v/o3GXgfAkj23+x9ID1Teoamo/SXcbvSf2PX7Vc8DdCmE1vN9di+32P9/5YR3vLnhCVGUWBjEkr3yh4H8v9CzmsbdhzOKzsJKM90iFdaTMjRPhGVsakRvOaRidljo6H6G7j+ctrJpsP+4COhDIl0La2+FS4+5mlocBaXY5QnGZysIBYoeSsl5qQzrSj/cgNrfuEzlWBfwA+EjrZyWUvpAAAAABJRU5ErkJggg==">Java语法糖与Java编译器<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_15-java语法糖与java编译器"><a href="#_15-java语法糖与java编译器" class="header-anchor">#</a> 15 | Java语法糖与Java编译器</h1> <p>在前面的篇章中，我们多次提到了 Java 语法和 Java 字节码的差异之处。这些差异之处都是通过 Java 编译器来协调的。今天我们便来列举一下 Java 编译器的协调工作。</p> <h2 id="自动装箱与自动拆箱"><a href="#自动装箱与自动拆箱" class="header-anchor">#</a> 自动装箱与自动拆箱</h2> <p>首先要提到的便是 Java 的自动装箱（auto-boxing）和自动拆箱（auto-unboxing）。</p> <p>我们知道，Java 语言拥有 8 个基本类型，每个基本类型都有对应的包装（wrapper）类型。</p> <p>之所以需要包装类型，是因为许多 Java 核心类库的 API 都是面向对象的。举个例子，Java 核心类库中的容器类，就只支持引用类型。</p> <p>当需要一个能够存储数值的容器类时，我们往往定义一个存储包装类对象的容器。</p> <p>对于基本类型的数值来说，我们需要先将其转换为对应的包装类，再存入容器之中。在 Java 程序中，这个转换可以是显式，也可以是隐式的，后者正是 Java 中的自动装箱。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public int foo() {
+
+  ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+
+  list.add(0);
+
+  int result = list.get(0);
+
+  return result;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>以上图中的 Java 代码为例。我构造了一个 Integer 类型的 ArrayList，并且向其中添加一个 int 值 0。然后，我会获取该 ArrayList 的第 0 个元素，并作为 int 值返回给调用者。这段代码对应的 Java 字节码如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public int foo();
+
+  Code:
+
+     0: new java/util/ArrayList
+
+     3: dup
+
+     4: invokespecial java/util/ArrayList.&quot;&lt;init&gt;&quot;:()V
+
+     7: astore_1
+
+     8: aload_1
+
+     9: iconst_0
+
+    10: invokestatic java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+
+    13: invokevirtual java/util/ArrayList.add:(Ljava/lang/Object;)Z
+
+    16: pop
+
+    17: aload_1
+
+    18: iconst_0
+
+    19: invokevirtual java/util/ArrayList.get:(I)Ljava/lang/Object;
+
+    22: checkcast java/lang/Integer
+
+    25: invokevirtual java/lang/Integer.intValue:()I
+
+    28: istore_2
+
+    29: iload_2
+
+    30: ireturn
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><p>当向泛型参数为 Integer 的 ArrayList 添加 int 值时，便需要用到自动装箱了。在上面字节码偏移量为 10 的指令中，我们调用了 Integer.valueOf 方法，将 int 类型的值转换为 Integer 类型，再存储至容器类中。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public static Integer valueOf(int i) {
+
+    if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)
+
+        return IntegerCache.cache[i + (-IntegerCache.low)];
+
+    return new Integer(i);
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>这是 Integer.valueOf 的源代码。可以看到，当请求的 int 值在某个范围内时，我们会返回缓存了的 Integer 对象；而当所请求的 int 值在范围之外时，我们则会新建一个 Integer 对象。</p> <p>在介绍反射的那一篇中，我曾经提到参数 java.lang.Integer.IntegerCache.high。这个参数将影响这里面的 IntegerCache.high。</p> <p>也就是说，我们可以通过配置该参数，扩大 Integer 缓存的范围。Java 虚拟机参数 -XX:+AggressiveOpts 也会将 IntegerCache.high 调整至 20000。</p> <p>奇怪的是，Java 并不支持对 IntegerCache.low 的更改，也就是说，对于小于 -128 的整数，我们无法直接使用由 Java 核心类库所缓存的 Integer 对象。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+25: invokevirtual java/lang/Integer.intValue:()I
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>当从泛型参数为 Integer 的 ArrayList 取出元素时，我们得到的实际上也是 Integer 对象。如果应用程序期待的是一个 int 值，那么就会发生自动拆箱。</p> <p>在我们的例子中，自动拆箱对应的是字节码偏移量为 25 的指令。该指令将调用 Integer.intValue 方法。这是一个实例方法，直接返回 Integer 对象所存储的 int 值。</p> <h2 id="泛型与类型擦除"><a href="#泛型与类型擦除" class="header-anchor">#</a> 泛型与类型擦除</h2> <p>你可能已经留意到了，在前面例子生成的字节码中，往 ArrayList 中添加元素的 add 方法，所接受的参数类型是 Object；而从 ArrayList 中获取元素的 get 方法，其返回类型同样也是 Object。</p> <p>前者还好，但是对于后者，在字节码中我们需要进行向下转换，将所返回的 Object 强制转换为 Integer，方能进行接下来的自动拆箱。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+13: invokevirtual java/util/ArrayList.add:(Ljava/lang/Object;)Z
+
+...
+
+19: invokevirtual java/util/ArrayList.get:(I)Ljava/lang/Object;
+
+22: checkcast java/lang/Integer
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>之所以会出现这种情况，是因为 Java 泛型的类型擦除。这是个什么概念呢？简单地说，那便是 Java 程序里的泛型信息，在 Java 虚拟机里全部都丢失了。这么做主要是为了兼容引入泛型之前的代码。</p> <p>当然，并不是每一个泛型参数被擦除类型后都会变成 Object 类。对于限定了继承类的泛型参数，经过类型擦除后，所有的泛型参数都将变成所限定的继承类。也就是说，Java 编译器将选取该泛型所能指代的所有类中层次最高的那个，作为替换泛型的类。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class GenericTest&lt;T extends Number&gt; {
+
+  T foo(T t) {
+
+    return t;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>举个例子，在上面这段 Java 代码中，我定义了一个 T extends Number 的泛型参数。它所对应的字节码如下所示。可以看到，foo  方法的方法描述符所接收参数的类型以及返回类型都为 Number。方法描述符是 Java 虚拟机识别方法调用的目标方法的关键。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+T foo(T);
+
+  descriptor: (Ljava/lang/Number;)Ljava/lang/Number;
+
+  flags: (0x0000)
+
+  Code:
+
+    stack=1, locals=2, args_size=2
+
+       0: aload_1
+
+       1: areturn
+
+  Signature: (TT;)TT;
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>不过，字节码中仍存在泛型参数的信息，如方法声明里的 T foo(T)，以及方法签名（Signature）中的“(TT;)TT;”。这类信息主要由 Java 编译器在编译他类时使用。</p> <p>既然泛型会被类型擦除，那么我们还有必要用它吗？</p> <p>我认为是有必要的。Java 编译器可以根据泛型参数判断程序中的语法是否正确。举例来说，尽管经过类型擦除后，ArrayList.add  方法所接收的参数是 Object 类型，但是往泛型参数为 Integer 类型的 ArrayList 中添加字符串对象，Java  编译器是会报错的。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+
+list.add(&quot;0&quot;); // 编译出错
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h2 id="桥接方法"><a href="#桥接方法" class="header-anchor">#</a> 桥接方法</h2> <p>泛型的类型擦除带来了不少问题。其中一个便是方法重写。在第四篇的课后实践中，我留了这么一段代码：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Merchant&lt;T extends Customer&gt; {
+
+  public double actionPrice(T customer) {
+
+    return 0.0d;
+
+  }
+
+}
+
+ 
+
+class VIPOnlyMerchant extends Merchant&lt;VIP&gt; {
+
+  @Override
+
+  public double actionPrice(VIP customer) {
+
+    return 0.0d;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>VIPOnlyMerchant 中的 actionPrice 方法是符合 Java 语言的方法重写的，毕竟都使用 @Override  来注解了。然而，经过类型擦除后，父类的方法描述符为 (LCustomer;)D，而子类的方法描述符为 (LVIP;)D。这显然不符合 Java  虚拟机关于方法重写的定义。</p> <p>为了保证编译而成的 Java 字节码能够保留重写的语义，Java 编译器额外添加了一个桥接方法。该桥接方法在字节码层面重写了父类的方法，并将调用子类的方法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class VIPOnlyMerchant extends Merchant&lt;VIP&gt;
+
+...
+
+  public double actionPrice(VIP);
+
+    descriptor: (LVIP;)D
+
+    flags: (0x0001) ACC_PUBLIC
+
+    Code:
+
+         0: dconst_0
+
+         1: dreturn
+
+ 
+
+  public double actionPrice(Customer);
+
+    descriptor: (LCustomer;)D
+
+    flags: (0x1041) ACC_PUBLIC, ACC_BRIDGE, ACC_SYNTHETIC
+
+    Code:
+
+         0: aload_0
+
+         1: aload_1
+
+         2: checkcast class VIP
+
+         5: invokevirtual actionPrice:(LVIP;)D
+
+         8: dreturn
+
+ 
+
+// 这个桥接方法等同于
+
+public double actionPrice(Customer customer) {
+
+  return actionPrice((VIP) customer);
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br></div></div><p>在我们的例子中，VIPOnlyMerchant 类将包含一个桥接方法 actionPrice(Customer)，它重写了父类的同名同方法描述符的方法。该桥接方法将传入的 Customer  参数强制转换为 VIP 类型，再调用原本的 actionPrice(VIP) 方法。</p> <p>当一个声明类型为 Merchant，实际类型为 VIPOnlyMerchant 的对象，调用 actionPrice  方法时，字节码里的符号引用指向的是 Merchant.actionPrice(Customer) 方法。Java 虚拟机将动态绑定至  VIPOnlyMerchant 类的桥接方法之中，并且调用其 actionPrice(VIP) 方法。</p> <p>需要注意的是，在 javap 的输出中，该桥接方法的访问标识符除了代表桥接方法的 ACC_BRIDGE 之外，还有  ACC_SYNTHETIC。它表示该方法对于 Java 源代码来说是不可见的。当你尝试通过传入一个声明类型为 Customer  的对象作为参数，调用 VIPOnlyMerchant 类的 actionPrice 方法时，Java 编译器会报错，并且提示参数类型不匹配。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+    Customer customer = new VIP();
+
+    new VIPOnlyMerchant().actionPrice(customer); // 编译出错    
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>当然，如果你实在想要调用这个桥接方法，那么你可以选择使用反射机制。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Merchant {
+
+  public Number actionPrice(Customer customer) {
+
+    return 0;
+
+  }
+
+}
+
+ 
+
+class NaiveMerchant extends Merchant {
+
+  @Override
+
+  public Double actionPrice(Customer customer) {
+
+    return 0.0D;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>除了前面介绍的泛型重写会生成桥接方法之外，如果子类定义了一个与父类参数类型相同的方法，其返回类型为父类方法返回类型的子类，那么 Java 编译器也会为其生成桥接方法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class NaiveMerchant extends Merchant
+
+  public java.lang.Double actionPrice(Customer);
+
+    descriptor: (LCustomer;)Ljava/lang/Double;
+
+    flags: (0x0001) ACC_PUBLIC
+
+    Code:
+
+      stack=2, locals=2, args_size=2
+
+         0: dconst_0
+
+         1: invokestatic Double.valueOf:(D)Ljava/lang/Double;
+
+         4: areturn
+
+ 
+
+  public java.lang.Number actionPrice(Customer);
+
+    descriptor: (LCustomer;)Ljava/lang/Number;
+
+    flags: (0x1041) ACC_PUBLIC, ACC_BRIDGE, ACC_SYNTHETIC
+
+    Code:
+
+      stack=2, locals=2, args_size=2
+
+         0: aload_0
+
+         1: aload_1
+
+         2: invokevirtual actionPrice:(LCustomer;)Ljava/lang/Double;
+
+         5: areturn         
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><p>我之前曾提到过，class 文件里允许出现两个同名、同参数类型但是不同返回类型的方法。这里的原方法和桥接方法便是其中一个例子。由于该桥接方法同样标注了  ACC_SYNTHETIC，因此，当在 Java 程序中调用 NaiveMerchant.actionPrice 时，我们只会调用到原方法。</p> <h2 id="其他语法糖"><a href="#其他语法糖" class="header-anchor">#</a> 其他语法糖</h2> <p>在前面的篇章中，我已经介绍过了变长参数、try-with-resources 以及在同一 catch 代码块中捕获多种异常等语法糖。下面我将列举另外两个常见的语法糖。</p> <p>foreach 循环允许 Java 程序在 for 循环里遍历数组或者 Iterable 对象。对于数组来说，foreach 循环将从 0 开始逐一访问数组中的元素，直至数组的末尾。其等价的代码如下面所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public void foo(int[] array) {
+
+  for (int item : array) {
+
+  }
+
+}
+
+// 等同于
+
+public void bar(int[] array) {
+
+  int[] myArray = array;
+
+  int length = myArray.length;
+
+  for (int i = 0; i &lt; length; i++) {
+
+    int item = myArray[i];
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>对于 Iterable 对象来说，foreach 循环将调用其 iterator 方法，并且用它的 hasNext 以及 next 方法来遍历该 Iterable 对象中的元素。其等价的代码如下面所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public void foo(ArrayList&lt;Integer&gt; list) {
+
+  for (Integer item : list) {
+
+  }
+
+}
+
+// 等同于
+
+public void bar(ArrayList&lt;Integer&gt; list) {
+
+  Iterator&lt;Integer&gt; iterator = list.iterator();
+
+  while (iterator.hasNext()) {
+
+    Integer item = iterator.next();
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>字符串 switch 编译而成的字节码看起来非常复杂，但实际上就是一个哈希桶。由于每个 case 所截获的字符串都是常量值，因此，Java 编译器会将原来的字符串 switch 转换为 int 值 switch，比较所输入的字符串的哈希值。</p> <p>由于字符串哈希值很容易发生碰撞，因此，我们还需要用 String.equals 逐个比较相同哈希值的字符串。</p> <p>如果你感兴趣的话，可以自己利用 javap 分析字符串 switch 编译而成的字节码。</p> <h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我主要介绍了 Java 编译器对几个语法糖的处理。</p> <p>基本类型和其包装类型之间的自动转换，也就是自动装箱、自动拆箱，是通过加入 [Wrapper].valueOf（如  Integer.valueOf）以及 [Wrapper].[primitive]Value（如  Integer.intValue）方法调用来实现的。</p> <p>Java 程序中的泛型信息会被擦除。具体来说，Java 编译器将选取该泛型所能指代的所有类中层次最高的那个，作为替换泛型的具体类。</p> <p>由于 Java 语义与 Java 字节码中关于重写的定义并不一致，因此 Java 编译器会生成桥接方法作为适配器。此外，我还介绍了 foreach 循环以及字符串 switch 的编译。</p> <p>今天的实践环节，你可以探索一下 Java 10 的 var 关键字，是否保存了泛型信息？是否支持自动装拆箱？</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+  public void foo() {
+
+    var value = 1;
+
+    var list = new ArrayList&lt;Integer&gt;();
+
+    list.add(value);
+
+    // list.add(&quot;1&quot;); 这一句能够编译吗？
+
+  }
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><h2 id="精选留言-11"><a href="#精选留言-11" class="header-anchor">#</a> 精选留言(11)</h2> <ul><li></li></ul> <p>godtrue</p> <p>2018-08-25</p> <p>14</p> <p>本节还是比较容易理解的，也搞清楚了泛型相关的疑惑点，非常感谢。
+小结如下：
+1:Java语法糖-是一种帮助开发人员提高开发效率的小甜点，原理是将一些繁琐的事情交给编译器来处理，开发人员少做一些事情，当然，本纸上这些事情还必须要做，只是有编译器来做了</p> <p>2:Java语法糖有那几种呢？如下所示：
+2-1:包装类型和基本类型间的转换，自动装箱和拆箱的设计
+2-2:泛型的设计
+2-3:变长参数的设计
+2-4:try-with-resources，关闭资源的设计
+2-5:在同一个catch代码块中捕获多种异常
+2-6:finally代码块总是被执行的设计
+2-7:foreach循环数组的设计
+2-8:foreach循环Iterable对象的设计</p> <p>3:编译器的具体实现细节不是很清楚，猜测是识别出对应的语法然后填充上对应的代码，将语法糖还原成其本质-一些重复繁琐的代码块</p> <p>4:之前有同事问我泛型是怎么实现的？
+我讲不出来，只晓得使用泛型后，不需要写类型强转的代码了，如果类型不对也会有提示且编译失败，现在知道的多一点了，本质上类型强转的工作还是必须要做的，只是不是有开发人员来做了，由编译器来做，并且编译器会擦除掉对应的泛型信息，使用合适的父类型来代替，可能是Object类也可能是声明泛型时指定的继承的类</p> <p>作者回复: 赞</p> <ul><li></li></ul> <p>永烁星光</p> <p>2018-08-25</p> <p>6</p> <p>直到这节课逐渐感知到了学习jvm的妙处，我想将这专栏反复看和实践终能消化为自己的知识</p> <ul><li></li></ul> <p>^_^</p> <p>2018-11-13</p> <p>2</p> <p>C++ 是真泛型，java 较之算是伪泛型</p> <p>作者回复: 确实</p> <ul><li></li></ul> <p>WL</p> <p>2018-12-14</p> <p>1</p> <p>invokestatic Double.valueOf:(D)Ljava/lang/Double;
+想请教一下老师这个字节码中的(D)和java前的L的作用是标记什么, 查了半天都没查到, 希望老师回答一下.</p> <ul><li></li></ul> <p>东方</p> <p>2018-08-26</p> <p>1</p> <p>var保存了泛型信息</p> <p>var定义变量必须直接初始化，基于初始化的值做类型推导，javac编译期间的语法糖</p> <p>所以不能声明函数的参数为var类型</p> <p>foreach语法糖，对于实现了迭代器Iterable<T>接口的类型，使用迭代器方法；
+foreach对于数组和变长参数的处理方式与上述略有不同，先求数组长度，再做类似while循环遍历</T></p> <ul><li></li></ul> <p>403</p> <p>2018-08-26</p> <p>相比来看，c#的泛型是真泛型</p> <p>作者回复: 😉</p> <ul><li></li></ul> <p>code-arti...</p> <p>2018-08-25</p> <p>每次看到示例代码的java字节码就犯懵，觉得很复杂，是不是有必要去了解下字节码</p> <p>作者回复: 字节码其实不难的。我会专门写一篇来介绍一下。</p> <ul><li></li></ul> <p>herome</p> <p>2018-08-25</p> <p>求老师画图啊</p> <p>作者回复: 这一篇貌似没啥地方能够画图的吧？请问你具体对哪一块有疑问？</p> <ul><li></li></ul> <p>godtrue</p> <p>2018-08-25</p> <p>奇怪的是，Java 并不支持对 IntegerCache.low 的更改，也就是说，对于小于 -128 的整数，我们无法直接使用由 Java 核心类库所缓存的 Integer 对象。
+这个奇怪的现象到底是为啥呢？</p> <p>作者回复: JDK认为用户不需要缓存小于-128的整数。这当然有可能是错误的。</p> <ul><li></li></ul> <p>任鹏斌</p> <p>2018-08-24</p> <p>有点落后刚升级到jdk8对10还一无所知</p> <p>作者回复: Java新版本的语法糖并不多，我印象中10也只有var</p> <ul><li></li></ul> <p>三木子</p> <p>2018-08-24</p> <p>从实现上说可以设计一个int类型的list，而jdk中arrayList是object类型，这样做是不是为了通用型考虑呢？</p> <p>作者回复: 对的</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/a695e3/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">Java虚拟机是怎么实现synchronized的？</div></a> <a href="/pages/2de1d5/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">即时编译（上）</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/a695e3/" class="prev">Java虚拟机是怎么实现synchronized的？</a></span> <span class="next"><a href="/pages/2de1d5/">即时编译（上）</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/48.41c4fd1e.js" defer></script>
+  </body>
+</html>

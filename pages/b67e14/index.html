@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>即时编译（下） | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/50.2404cf28.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/36.f1893ee4.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/48.41c4fd1e.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/54.2499d935.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/58.a8c06b55.js"><link rel="prefetch" href="/assets/js/59.37d62779.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Java虚拟机基本原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>高效编译</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/bf46c5/" class="sidebar-link">常用工具介绍</a></li><li><a href="/pages/02bc49/" class="sidebar-link">Java内存模型</a></li><li><a href="/pages/a695e3/" class="sidebar-link">Java虚拟机是怎么实现synchronized的？</a></li><li><a href="/pages/f1dd7f/" class="sidebar-link">Java语法糖与Java编译器</a></li><li><a href="/pages/2de1d5/" class="sidebar-link">即时编译（上）</a></li><li><a href="/pages/b67e14/" aria-current="page" class="active sidebar-link">即时编译（下）</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#profiling" class="sidebar-link">Profiling</a></li><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#基于分支-profile-的优化" class="sidebar-link">基于分支 profile 的优化</a></li><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#基于类型-profile-的优化" class="sidebar-link">基于类型 profile 的优化</a></li><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#去优化" class="sidebar-link">去优化</a></li><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/b67e14/#精选留言-7" class="sidebar-link">精选留言(7)</a></li></ul></li><li><a href="/pages/438d91/" class="sidebar-link">即时编译器的中间表达形式</a></li><li><a href="/pages/661b6f/" class="sidebar-link">Java字节码（基础篇）</a></li><li><a href="/pages/ab7d29/" class="sidebar-link">方法内联（上）</a></li><li><a href="/pages/87a271/" class="sidebar-link">方法内联（下）</a></li><li><a href="/pages/f7b36c/" class="sidebar-link">HotSpot虚拟机的intrinsic</a></li><li><a href="/pages/2e8fbc/" class="sidebar-link">逃逸分析</a></li></ul></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>代码优化</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=%E9%AB%98%E6%95%88%E7%BC%96%E8%AF%91" title="分类" data-v-06225672>高效编译</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABGpJREFUSA3tVVtoXFUU3fvOI53UlmCaKIFmwEhsE7QK0ipFEdHEKpXaZGrp15SINsXUWvBDpBgQRKi0+KKoFeJHfZA+ED9KKoIU2gYD9UejTW4rVIzm0VSTziPzuNu1z507dibTTjL4U/DAzLn3nL3X2o91ziX6f9wMFdh6Jvbm9nNSV0msViVO6tN1Rm7NMu2OpeJ9lWBUTDxrJbYTS0hInuwciu9eLHlFxCLCZEk3MegsJmZ5K/JD6t7FkFdEvGUo1g7qJoG3MHImqRIn8/nzY1K9UPKKiJmtnUqHVE3Gbuay6vJE/N2FEmuxFjW2nUuE0yQXRRxLiTUAzs36zhZvOXJPdX850EVnnLZkB8prodQoM5JGj7Xk2mvC7JB8tG04Ef5PiXtG0UtxupRQSfTnBoCy554x18yJHI6I+G5Eru4LHmPJZEQsrvPUbMiA8G/WgMK7w7I+ez7++o2ANfbrjvaOl1tFMs+htG3IrZH9/hDX1Pr8Tc0UvH8tcX29KzAgIGcEkINyW5BF9x891hw6VYqgJHEk0huccS7vh3C6gTiODL+26huuBtbct8eZnqLML8PkxGYpuPZBqtqwkSjgc4mB5gbgig5i+y0UDK35LMxXisn9xQtK+nd26gTIHsHe/oblK/b29fUmN/8Y+9jAQrnBp56m1LcDlDp9irKTExSKduXJVWSqdBMA08pEJnEIOB3FPPMybu/oeV8zFeYN3xx576Q6RH+VmplE4ncQV5v+5rzSoyOU7PuEAg8g803PwBJ0CExno/jcMbN8tONYeOmHiuUNryvm3fRUy4tMPVLdAGkUhNWuggGrJcXPv+ouCjz0MKUHz1J2/E8IC9nqTabcxgaBYM0hPhD5Y65FsbxRQKxCQrDjDctW7PUM3HuZunFyifSAqEfuzCp48Il24luWUWZoyJCaPR82jE0+kFA643wRFVni4RYSq3ohJO2pZ7B5dO4xkDWbEpossJPLSrPjYID8rS2UHTlvyNxqIGsg674XJJ7vnh5L7PNwC4hh2sjCI96mzszOTpxLF0T7l88Yz7lAuK6OnL8gXLOnTvpzSb22YG8W7us3jSebFHeeqnXRG1vt+MoUM84LQIBmMsCTAcOauTh0T0l0neQK7m2bLMt2mGxU3HYssS0J2cdv5wljlPsrIuZLAG/2DOZIXgCYT8uMGZN+e2kSirfxZOPCsC0f24nTZzspnVn9VePS1Z5vubmAGGXG8ZFno9Hel0yfA5ZPhF7Dh972BQJ2qCpgH67lmWtBYbvk6sz02wjky2vXyz0XErP/kFB619js1BtwfOV4OPRqOQBjy3Qbk18vigUPPSD5ceHnwck7W9bhAqZdd7SuG7w4/P2F/GaJh8c7e9qgow+Q7cGBo+98WsLkuktFqiZabtXuQTu/Y5ETbR0v7tNSFnvrmu6pjdoan2KjMu8q/Hmj1EfCO2ZGfEIbIXKUlw8qaX9/b2oeSJmFksSeT/Fn0V3nSypChh4Gjh74ybO9aeZ/AN2dwciu2/MhAAAAAElFTkSuQmCC">即时编译（下）<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_17-即时编译-下"><a href="#_17-即时编译-下" class="header-anchor">#</a> 17 | 即时编译（下）</h1> <p>今天我们来继续讲解 Java 虚拟机中的即时编译。</p> <h2 id="profiling"><a href="#profiling" class="header-anchor">#</a> Profiling</h2> <p>上篇提到，分层编译中的 0 层、2 层和 3 层都会进行 profiling，收集能够反映程序执行状态的数据。其中，最为基础的便是方法的调用次数以及循环回边的执行次数。它们被用于触发即时编译。</p> <p>此外，0 层和 3 层还会收集用于 4 层 C2 编译的数据，比如说分支跳转字节码的分支 profile（branch  profile），包括跳转次数和不跳转次数，以及非私有实例方法调用指令、强制类型转换 checkcast 指令、类型测试 instanceof  指令，和引用类型的数组存储 aastore 指令的类型 profile（receiver type profile）。</p> <p>分支 profile 和类型 profile 的收集将给应用程序带来不少的性能开销。据统计，正是因为这部分额外的 profiling，使得 3 层 C1 代码的性能比 2 层 C1 代码的低 30%。</p> <p>在通常情况下，我们不会在解释执行过程中收集分支 profile 以及类型 profile。只有在方法触发 C1 编译后，Java 虚拟机认为该方法有可能被 C2 编译，方才在该方法的 C1 代码中收集这些 profile。</p> <p>只要在比较极端的情况下，例如等待 C1 编译的方法数目太多时，Java 虚拟机才会开始在解释执行过程中收集这些 profile。</p> <p>那么这些耗费巨大代价收集而来的 profile 具体有什么作用呢？</p> <p>答案是，C2 可以根据收集得到的数据进行猜测，假设接下来的执行同样会按照所收集的 profile 进行，从而作出比较激进的优化。</p> <h2 id="基于分支-profile-的优化"><a href="#基于分支-profile-的优化" class="header-anchor">#</a> 基于分支 profile 的优化</h2> <p>举个例子，下面这段代码中包含两个条件判断。第一个条件判断将测试所输入的 boolean 值。</p> <p>如果为 true，则将局部变量 v 设置为所输入的 int 值。如果为 false，则将所输入的 int 值经过一番运算之后，再存入局部变量 v 之中。</p> <p>第二个条件判断则测试局部变量 v 是否和所输入的 int 值相等。如果相等，则返回 0。如果不等，则将局部变量 v 经过一番运算之后，再将之返回。显然，当所输入的 boolean 值为 true 的情况下，这段代码将返回 0。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public static int foo(boolean f, int in) {
+
+  int v;
+
+  if (f) {
+
+    v = in;
+
+  } else {
+
+    v = (int) Math.sin(in);
+
+  }
+
+ 
+
+  if (v == in) {
+
+    return 0;
+
+  } else {
+
+    return (int) Math.cos(v);
+
+  }
+
+}
+
+// 编译而成的字节码：
+
+public static int foo(boolean, int);
+
+  Code:
+
+     0: iload_0
+
+     1: ifeq          9
+
+     4: iload_1
+
+     5: istore_2
+
+     6: goto          16
+
+     9: iload_1
+
+    10: i2d
+
+    11: invokestatic  java/lang/Math.sin:(D)D
+
+    14: d2i
+
+    15: istore_2
+
+    16: iload_2
+
+    17: iload_1
+
+    18: if_icmpne     23
+
+    21: iconst_0
+
+    22: ireturn
+
+    23: iload_2
+
+    24: i2d
+
+    25: invokestatic java/lang/Math.cos:(D)D
+
+    28: d2i
+
+    29: ireturn
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br></div></div><p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144002551-aa8c78.png" alt="image-20220531144002551"></p> <p>假设应用程序调用该方法时，所传入的 boolean 值皆为 true。那么，偏移量为 1 以及偏移量为 18 的条件跳转指令所对应的分支 profile 中，跳转的次数都为 0。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144011879-de74b3.png" alt="image-20220531144011879"></p> <p>C2 可以根据这两个分支 profile 作出假设，在接下来的执行过程中，这两个条件跳转指令仍旧不会发生跳转。基于这个假设，C2 便不再编译这两个条件跳转语句所对应的 false 分支了。</p> <p>我们暂且不管当假设错误的时候会发生什么，先来看一看剩下来的代码。经过“剪枝”之后，在第二个条件跳转处，v 的值只有可能为所输入的 int 值。因此，该条件跳转可以进一步被优化掉。最终的结果是，在第一个条件跳转之后，C2 代码将直接返回 0。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144018666-75d1b1.png" alt="image-20220531144018666"></p> <p>这里我打印了 C2 的编译结果。可以看到，在地址为 2cee 的指令处进行过一次比较之后，该机器码便直接返回 0。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+Compiled method (c2)      95   16       4       CompilationTest::foo (30 bytes)
+
+...
+
+CompilationTest.foo  [0x0000000104fb2ce0, 0x0000000104fb2d38]  88 bytes
+
+[Entry Point]
+
+[Verified Entry Point]
+
+[Constants]
+
+  # {method} {0x000000012629e380} 'foo' '(ZI)I' in 'CompilationTest'
+
+  # parm0:    rsi       = boolean
+
+  # parm1:    rdx       = int
+
+  #           [sp+0x30]  (sp of caller)
+
+  0x0000000104fb2ce0: mov    DWORD PTR [rsp-0x14000],eax
+
+  0x0000000104fb2ce7: push   rbp
+
+  0x0000000104fb2ce8: sub    rsp,0x20
+
+  0x0000000104fb2cec: test   esi,esi
+
+  0x0000000104fb2cee: je     0x0000000104fb2cfe // 跳转至?
+
+  0x0000000104fb2cf0: xor    eax,eax            // 将返回值设置为 0
+
+  0x0000000104fb2cf2: add    rsp,0x20
+
+  0x0000000104fb2cf6: pop    rbp
+
+  0x0000000104fb2cf7: test   DWORD PTR [rip+0xfffffffffca32303],eax // safepoint
+
+  0x0000000104fb2cfd: ret    
+
+  ...
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div></div><p>总结一下，根据条件跳转指令的分支 profile，即时编译器可以将从未执行过的分支剪掉，以避免编译这些很有可能不会用到的代码，从而节省编译时间以及部署代码所要消耗的内存空间。此外，“剪枝”将精简程序的数据流，从而触发更多的优化。</p> <p>在现实中，分支 profile 出现仅跳转或者仅不跳转的情况并不多见。当然，即时编译器对分支 profile 的利用也不仅限于“剪枝”。它还会根据分支 profile，计算每一条程序执行路径的概率，以便某些编译器优化优先处理概率较高的路径。</p> <h2 id="基于类型-profile-的优化"><a href="#基于类型-profile-的优化" class="header-anchor">#</a> 基于类型 profile 的优化</h2> <p>另外一个例子则是关于 instanceof 以及方法调用的类型 profile。下面这段代码将测试所传入的对象是否为 Exception 的实例，如果是，则返回它的系统哈希值；如果不是，则返回它的哈希值。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public static int hash(Object in) {
+
+  if (in instanceof Exception) {
+
+    return System.identityHashCode(in);
+
+  } else {
+
+    return in.hashCode();
+
+  }
+
+}
+
+// 编译而成的字节码：
+
+public static int hash(java.lang.Object);
+
+  Code:
+
+     0: aload_0
+
+     1: instanceof java/lang/Exception
+
+     4: ifeq          12
+
+     7: aload_0
+
+     8: invokestatic java/lang/System.identityHashCode:(Ljava/lang/Object;)I
+
+    11: ireturn
+
+    12: aload_0
+
+    13: invokevirtual java/lang/Object.hashCode:()I
+
+    16: ireturn
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><p>假设应用程序调用该方法时，所传入的 Object 皆为 Integer 实例。那么，偏移量为 1 的 instanceof 指令的类型 profile 仅包含  Integer，偏移量为 4 的分支跳转语句的分支 profile 中不跳转的次数为 0，偏移量为 13 的方法调用指令的类型 profile  仅包含 Integer。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144026822-d24e5a.png" alt="image-20220531144026822"></p> <p>在 Java 虚拟机中，instanceof 测试并不简单。如果 instanceof 的目标类型是 final 类型，那么 Java 虚拟机仅需比较测试对象的动态类型是否为该 final 类型。</p> <p>在讲解对象的内存分布那一篇中，我曾经提到过，对象头存有该对象的动态类型。因此，获取对象的动态类型仅为单一的内存读指令。</p> <p>如果目标类型不是 final 类型，比如说我们例子中的 Exception，那么 Java 虚拟机需要从测试对象的动态类型开始，依次测试该类，该类的父类、祖先类，该类所直接实现或者间接实现的接口是否与目标类型一致。</p> <p>不过，在我们的例子中，instanceof 指令的类型 profile 仅包含 Integer。根据这个信息，即时编译器可以假设，在接下来的执行过程中，所输入的 Object 对象仍为 Integer 实例。</p> <p>因此，生成的代码将测试所输入的对象的动态类型是否为 Integer。如果是的话，则继续执行接下来的代码。（该优化源自 Graal，采用 C2 可能无法复现。）</p> <p>然后，即时编译器会采用和第一个例子中一致的针对分支 profile 的优化，以及对方法调用的条件去虚化内联。</p> <p>我会在接下来的篇章中详细介绍内联，这里先说结果：生成的代码将测试所输入的对象动态类型是否为 Integer。如果是的话，则执行 Integer.hashCode() 方法的实质内容，也就是返回该 Integer 实例的 value 字段。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public final class Integer ... {
+
+    ...
+
+    @Override
+
+    public int hashCode() {
+
+        return Integer.hashCode(value);
+
+    }
+
+ 
+
+    public static int hashCode(int value) {
+
+        return value;
+
+    }
+
+    ...
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144035976-530dc2.png" alt="image-20220531144035976"></p> <p>和第一个例子一样，根据数据流分析，上述代码可以最终优化为极其简单的形式。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531144045111-38bc2e.png" alt="image-20220531144045111"></p> <p>这里我打印了 Graal 的编译结果。可以看到，在地址为 1ab7 的指令处进行过一次比较之后，该机器码便直接返回所传入的 Integer 对象的 value 字段。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+Compiled method (JVMCI)     600   23       4
+
+...
+
+----------------------------------------------------------------------
+
+CompilationTest.hash (CompilationTest.hash(Object))  [0x000000011d811aa0, 0x000000011d811b00]  96 bytes
+
+[Entry Point]
+
+[Verified Entry Point]
+
+[Constants]
+
+  # {method} {0x00000001157053c8} 'hash' '(Ljava/lang/Object;)I' in 'CompilationTest'
+
+  # parm0:    rsi:rsi   = 'java/lang/Object'
+
+  #           [sp+0x20]  (sp of caller)
+
+  0x000000011d811aa0: mov    DWORD PTR [rsp-0x14000],eax
+
+  0x000000011d811aa7: sub    rsp,0x18
+
+  0x000000011d811aab: mov    QWORD PTR [rsp+0x10],rbp
+
+  // 比较 [rsi+0x8]，也就是所传入的 Object 参数的动态类型，是否为 Integer。这里 0xf80022ad 是 Integer 类的内存地址。
+
+  0x000000011d811ab0: cmp    DWORD PTR [rsi+0x8],0xf80022ad
+
+  // 如果不是，跳转至？
+
+  0x000000011d811ab7: jne    0x000000011d811ad3
+
+  // 加载 Integer.value。在启用压缩指针时，该字段的偏移量为 12，也就是 0xc
+
+  0x000000011d811abd: mov    eax,DWORD PTR [rsi+0xc]
+
+  0x000000011d811ac0: mov    rbp,QWORD PTR [rsp+0x10]
+
+  0x000000011d811ac5: add    rsp,0x18
+
+  0x000000011d811ac9: test   DWORD PTR [rip+0xfffffffff272f537],eax        
+
+  0x000000011d811acf: vzeroupper 
+
+  0x000000011d811ad2: ret
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div></div><p>和基于分支 profile 的优化一样，基于类型 profile 的优化同样也是作出假设，从而精简控制流以及数据流。这两者的核心都是假设。</p> <p>对于分支 profile，即时编译器假设的是仅执行某一分支；对于类型 profile，即时编译器假设的是对象的动态类型仅为类型 profile 中的那几个。</p> <p>那么，当假设失败的情况下，程序将何去何从？我们继续往下看。</p> <h2 id="去优化"><a href="#去优化" class="header-anchor">#</a> 去优化</h2> <p>Java 虚拟机给出的解决方案便是去优化，即从执行即时编译生成的机器码切换回解释执行。</p> <p>在生成的机器码中，即时编译器将在假设失败的位置上插入一个陷阱（trap）。该陷阱实际上是一条 call 指令，调用至 Java  虚拟机里专门负责去优化的方法。与普通的 call 指令不一样的是，去优化方法将更改栈上的返回地址，并不再返回即时编译器生成的机器码中。</p> <p>在上面的程序控制流图中，我画了很多红色方框的问号。这些问号便代表着一个个的陷阱。一旦踏入这些陷阱，便将发生去优化，并切换至解释执行。</p> <p>去优化的过程相当复杂。由于即时编译器采用了许多优化方式，其生成的代码和原本的字节码的差异非常之大。</p> <p>在去优化的过程中，需要将当前机器码的执行状态转换至某一字节码之前的执行状态，并从该字节码开始执行。这便要求即时编译器在编译过程中记录好这两种执行状态的映射。</p> <p>举例来说，经过逃逸分析之后，机器码可能并没有实际分配对象，而是在各个寄存器中存储该对象的各个字段（标量替换，具体我会在之后的篇章中进行介绍）。在去优化过程中，Java 虚拟机需要还原出这个对象，以便解释执行时能够使用该对象。</p> <p>当根据映射关系创建好对应的解释执行栈桢后，Java 虚拟机便会采用 OSR 技术，动态替换栈上的内容，并在目标字节码处开始解释执行。</p> <p>此外，在调用 Java 虚拟机的去优化方法时，即时编译器生成的机器码可以根据产生去优化的原因来决定是否保留这一份机器码，以及何时重新编译对应的 Java 方法。</p> <p>如果去优化的原因与优化无关，即使重新编译也不会改变生成的机器码，那么生成的机器码可以在调用去优化方法时传入 Action_None，表示保留这一份机器码，在下一次调用该方法时重新进入这一份机器码。</p> <p>如果去优化的原因与静态分析的结果有关，例如类层次分析，那么生成的机器码可以在调用去优化方法时传入 Action_Recompile，表示不保留这一份机器码，但是可以不经过重新 profile，直接重新编译。</p> <p>如果去优化的原因与基于 profile 的激进优化有关，那么生成的机器码需要在调用去优化方法时传入 Action_Reinterpret，表示不保留这一份机器码，而且需要重新收集程序的 profile。</p> <p>这是因为基于 profile 的优化失败的时候，往往代表这程序的执行状态发生改变，因此需要更正已收集的 profile，以更好地反映新的程序执行状态。</p> <h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我介绍了 Java 虚拟机的 profiling 以及基于所收集的数据的优化和去优化。</p> <p>通常情况下，解释执行过程中仅收集方法的调用次数以及循环回边的执行次数。</p> <p>当方法被 3 层 C1 所编译时，生成的 C1 代码将收集条件跳转指令的分支 profile，以及类型相关指令的类型 profile。在部分极端情况下，Java 虚拟机也会在解释执行过程中收集这些 profile。</p> <p>基于分支 profile 的优化以及基于类型 profile 的优化都将对程序今后的执行作出假设。这些假设将精简所要编译的代码的控制流以及数据流。在假设失败的情况下，Java 虚拟机将采取去优化，退回至解释执行并重新收集相关的 profile。</p> <p>今天的实践环节，你可以使用参数</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+-XX:CompileCommand='print,*ClassName.methodName'
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>来打印程序运行过程中即时编译器生成的机器码。官方的 JDK 可能不包含反汇编器动态链接库，如 hsdis-amd64.dylib。你可能需要另外下载。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// java -XX:CompileCommand='print,CompilationTest.foo' CompilationTestjava -XX:CompileCommand='print,CompilationTest.foo' CompilationTest
+
+public class CompilationTest {
+
+  public static int foo(boolean f, int in) {
+
+    int v;
+
+    if (f) {
+
+      v = in;
+
+    } else {
+
+      v = (int) Math.sin(in);
+
+    }
+
+    if (v == in) {
+
+      return 0;
+
+    } else {
+
+      return (int) Math.cos(v);
+
+    }
+
+  }
+
+  public static void main(String[] args) throws InterruptedException {
+
+    for (int i = 0; i &lt; 500000; i++) {
+
+      foo(true, 2);
+
+    }
+
+    Thread.sleep(2000);
+
+  }
+
+}
+
+ 
+
+ 
+
+// java -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler -XX:CompileCommand='print,CompilationTest2.hash' CompilationTest2
+
+public class CompilationTest2 {
+
+  public static int hash(Object input) {
+
+    if (input instanceof Exception) {
+
+      return System.identityHashCode(input);
+
+    } else {
+
+      return input.hashCode();
+
+    }
+
+  }
+
+  public static void main(String[] args) throws InterruptedException {
+
+    for (int i = 0; i &lt; 500000; i++) {
+
+      hash(i);
+
+    }
+
+    Thread.sleep(2000);
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br></div></div><h2 id="精选留言-7"><a href="#精选留言-7" class="header-anchor">#</a> 精选留言(7)</h2> <ul><li></li></ul> <p>godtrue</p> <p>2018-09-02</p> <p>4</p> <p>这节是即时编译器的有关优化、去优化、以及何时优化和为什么去优化的内容。可能比较底层，看不见摸不着，一句两句也说不清楚，所以，有点晦涩。
+不过经过反复看有点感觉了，小结如下：
+1:profile-是收集运行时状态信息，用于编译器优化，当然，收集信息也是耗性能的，所以，也是有前提条件的，当存在优化的可能性时才去费劲吧啦的收集相关信息</p> <p>2:本节介绍的两种优化的方式思路，都是采用取巧少做事情的方式实现，是建立在假设有些事情不需要做的前提下采用的优化措施</p> <p>3:如果假设失败，那就去优化呗！还用原来的方式老老实实的解释执行就完了</p> <p>上述思路是理解了，不过具体实现还是蒙蒙的，应该是水平有限理解不到位吧！整体还是有收获的，所以，非常感谢！</p> <p>作者回复: 我觉得总结得很到位了。</p> <p>这篇文章主要就是在介绍profile-guided optimization。介绍了两个优化的案例，以及过于乐观的优化出错时怎么补救。</p> <ul><li></li></ul> <p>徐志毅</p> <p>2018-08-29</p> <p>1</p> <p>雨迪老师，请问有什么方式可以跟踪JMM里主内存与工作内存的交互，如什么时候加载到工作内存、什么时候同步到主内存～ 盼回复，谢谢</p> <p>作者回复: JMM的工作内存是个虚拟概念，映射到我们的体系架构就是CPU缓存。</p> <p>要追踪缓存更新事件的话，估计得看perf，VTune等支持CPU performance counter的工具啦</p> <ul><li></li></ul> <p>jimi</p> <p>2018-08-29</p> <p>1</p> <p>那么有什么规则，可以让代码尽可能被优化？</p> <ul><li></li></ul> <p>xiaobang</p> <p>2018-10-10</p> <p>想问下生成的机器码如何和其它未编译的字节码交互？比如相互调用，访问对象内的字段，new对象和对应的gc</p> <p>作者回复: 在同一方法内，所有的字节码都被编译了。机器码与字节码的切换在方法调用(或者循环回边，对应OSR编译)。</p> <p>对于已经在堆上的对象，字节码和机器码所使用对象布局是一致的，解释执行器从哪个偏移量访问某字段，机器码也会从这个偏移量访问字段。(对于标量替换的新建对象，机器码会在去优化时重建对象。)</p> <p>JVM里的Runtime是共享的，因此像new对象，实际上都会走到同一个底层方法中。GC是独立的组件，跟字节码机器码没关系，所有new对象都会被JVM runtime追踪。</p> <ul><li></li></ul> <p>乔毅</p> <p>2018-09-03</p> <p>请教下老师，JIT利用SIMD进行优化的实现程度？实践中看到大多是仅仅做了循环展开。换言之，有没有什么最佳实践，可以写出JIT SIMD优化友好的代码。</p> <p>作者回复: 马上会专门开一篇介绍。可以关注一下OpenJDK的Panama项目，会提供vector API</p> <ul><li></li></ul> <p>茶底</p> <p>2018-08-30</p> <p>大佬我已经把graal拿到手了。目前用了下gu下语言挺好使的。但是这个怎么编译啊。。。</p> <p>作者回复: Java 10自带Graal编译器。Oracle OTN下的GraalVM也是编译好的版本，无需另外编译。</p> <p>如果想要改Graal源代码后编译，可以参考github.com/oracle/graal/tree/master/compiler/README.md</p> <ul><li></li></ul> <p>三木子</p> <p>2018-08-30</p> <p>感觉好难，我想问下在现实情况下通过编译器调优的情况多吗？</p> <p>作者回复: 调优的情况不多的，能做的即时编译器都帮你做了</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/2de1d5/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">即时编译（上）</div></a> <a href="/pages/438d91/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">即时编译器的中间表达形式</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/2de1d5/" class="prev">即时编译（上）</a></span> <span class="next"><a href="/pages/438d91/">即时编译器的中间表达形式</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/50.2404cf28.js" defer></script>
+  </body>
+</html>

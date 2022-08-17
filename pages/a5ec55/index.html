@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>基准测试框架JMH（上） | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/59.37d62779.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/36.f1893ee4.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/48.41c4fd1e.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/50.2404cf28.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/54.2499d935.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/58.a8c06b55.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Java虚拟机基本原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>高效编译</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>代码优化</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/1261df/" class="sidebar-link">字段访问相关优化</a></li><li><a href="/pages/55e20a/" class="sidebar-link">循环优化</a></li><li><a href="/pages/3c48b1/" class="sidebar-link">向量化</a></li><li><a href="/pages/1dab25/" class="sidebar-link">注解处理器</a></li><li><a href="/pages/a5ec55/" aria-current="page" class="active sidebar-link">基准测试框架JMH（上）</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/a5ec55/#性能测试的坑" class="sidebar-link">性能测试的坑</a></li><li class="sidebar-sub-header level2"><a href="/pages/a5ec55/#生成-jmh-项目" class="sidebar-link">生成 JMH 项目</a></li><li class="sidebar-sub-header level2"><a href="/pages/a5ec55/#编译和运行-jmh-项目" class="sidebar-link">编译和运行 JMH 项目</a></li><li class="sidebar-sub-header level2"><a href="/pages/a5ec55/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/a5ec55/#信-1" class="sidebar-link">信(1)</a></li></ul></li><li><a href="/pages/df61db/" class="sidebar-link">基准测试框架JMH（下）</a></li><li><a href="/pages/c723d4/" class="sidebar-link">Java虚拟机的监控及诊断工具（命令行篇）</a></li><li><a href="/pages/402e19/" class="sidebar-link">Java虚拟机的监控及诊断工具（GUI篇）</a></li><li><a href="/pages/13ab6e/" class="sidebar-link">JNI的运行机制</a></li></ul></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96" title="分类" data-v-06225672>代码优化</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABKFJREFUSA3tVl1oFVcQnrMbrak3QUgkya1akpJYcrUtIqW1JvFBE9LiQ5v6JmJpolbMg32rVrhgoYK0QiMY6i9Y6EMaW5D+xFJaTYItIuK2Kr3+BJNwkxBj05sQY3b3nM6cs2dv9t7NT/vQJw/sndk5M/PNzJkzewGerP+pAmy+ON8lLzUJgA8ZYxYIYZmGYRnctDaWvJJAmTtfP1pvXsBCCPP8QFcCaRkZYACgDZFO4stNIcBCajEOlmmC9XpJ9bAGCaPaPmzPl32dvLSVu3BWCTQs0XQQ6g0DYgwLIoAZbBCdW/i+781o1VVlm/410mw4h06Y7bIPHNyWDyL4FHkX03Q8SrzNhZTZriieckWt7cL6MM85YcLpsi/7O9/iXFT6MswI0DmmpkSaJ0qLxFIm3+i1THHB3zmBH3PYx9CcykcLOeQVVa7QtdxTgQgEleX2AjHYfwA+2ddV77ruGoJUbhGDI09YSNXyMpUt5ylOzxgbUmtOp7NmbNt8v3arjTBfYELmLUV+M+nSawNNAUqpT3ClJWg5I3BLT+cGW/DXNGCa6tx1aakCGEigArTn4TDIPdrXXYKCZNrHLMCOEPvHBlLQ99s9eHB7EB6NTki73CVPQ2F5MSx/uRQixfmq7rK0wYD8w8E905bnPDfwoWs/rfv93NWN/ZfvwsLIU7A09gxECyISeGJkHAau98L97tuw7NXnoPyNF8FcYGLGKsOs0mN3OEyec9esGW/ZEl945dTP34wlR2FZVQWU1q0Cw8Tr7p+hgLLNL0FPxx/Q35mA8aEUrH6nCgwEl0tn7wUiZYJnNRh6DK4UH/k0lfyrsBKdPVv/AriGIQcEDQZ65LBAGe2Rzui9Ybjz7XUppz1/uKBbyVPGkN3ZAeC6hr0x7Nr38N5+EqkoOm17xpoqR9ohQF55ERSvr4Dkr3chNfC3DMzGJlNBElW8w9nsGQvhNGIzDkXzCg8cLK951xHsFBlTJspJNi3ZFIMF2AeDV3q8DNOB+YHi6QTrChDIWDBRi5U5f+ZMfJLu3ccrqxtdxk4SKH336LFxSmkqefwU5T8fhdSdQf9IVKD6aNiwI/hnmcAZ91isYMJIaCUCx9W098+LgruikeTqzqqxKPUwqJyCPJiyemVVZBOijDGjD38Os0jOiSPL1z3SPjXNANbiNPXAdzTfukjjuknNBbyz3nwgTd3AVFqUJ5hpHlq9MveLnWwttUfoygBmvVjuikxND3znrhsELnZk7k+OjIGxeNEkomyLVta0xxn+HZhjBc4YZ/AFjHjz9u3xRZl2BN4aq9nFwWh16IrQ1aHHEd3j1+4/dB9OtH4e29A2H1DyHQRmOSfQZ1Fy7MHBTGB6J/Djq6p3OxyO2cB+4Car7v/o3GXgfAkj23+x9ID1Teoamo/SXcbvSf2PX7Vc8DdCmE1vN9di+32P9/5YR3vLnhCVGUWBjEkr3yh4H8v9CzmsbdhzOKzsJKM90iFdaTMjRPhGVsakRvOaRidljo6H6G7j+ctrJpsP+4COhDIl0La2+FS4+5mlocBaXY5QnGZysIBYoeSsl5qQzrSj/cgNrfuEzlWBfwA+EjrZyWUvpAAAAABJRU5ErkJggg==">基准测试框架JMH（上）<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_28-基准测试框架jmh-上"><a href="#_28-基准测试框架jmh-上" class="header-anchor">#</a> 28 | 基准测试框架JMH（上）</h1> <p>今天我们来聊聊性能基准测试（benchmarking）。</p> <p>大家或许都看到过一些不严谨的性能测试，以及基于这些测试结果得出的令人匪夷所思的结论。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int foo() {
+
+  int i = 0;
+
+  while (i &lt; 1_000_000_000) {
+
+    i++;
+
+  }
+
+  return i;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><p>举个例子，上面这段代码中的<code>foo</code>方法，将进行 10^9 次加法操作及跳转操作。</p> <p>不少开发人员，包括我在介绍反射调用那一篇中所做的性能测试，都使用了下面这段代码的测量方式，即通过<code>System.nanoTime</code>或者<code>System.currentTimeMillis</code>来测量每若干个操作（如连续调用 1000 次<code>foo</code>方法）所花费的时间。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public class LoopPerformanceTest {
+
+  static int foo() { ... }
+
+ 
+
+  public static void main(String[] args) {
+
+    // warmup
+
+    for (int i = 0; i &lt; 20_000; i++) {
+
+      foo();
+
+    }
+
+    // measurement
+
+    long current = System.nanoTime();
+
+    for (int i = 1; i &lt;= 10_000; i++) {
+
+      foo();
+
+      if (i % 1000 == 0) {
+
+        long temp = System.nanoTime();
+
+        System.out.println(temp - current);
+
+        current = System.nanoTime();
+
+      }
+
+    }
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br></div></div><p>这种测量方式实际上过于理性化，忽略了 Java 虚拟机、操作系统，乃至硬件系统所带来的影响。</p> <h2 id="性能测试的坑"><a href="#性能测试的坑" class="header-anchor">#</a> 性能测试的坑</h2> <p>关于 Java 虚拟机所带来的影响，我们在前面的篇章中已经介绍过不少，如 Java 虚拟机堆空间的自适配，即时编译等。</p> <p>在上面这段代码中，真正进行测试的代码（即<code>// measurement</code>后的代码）由于循环次数不多，属于冷循环，没有能触发 OSR 编译。</p> <p>也就是说，我们会在<code>main</code>方法中解释执行，然后调用<code>foo</code>方法即时编译生成的机器码中。这种混杂了解释执行以及即时编译生成代码的测量方式，其得到的数据含义不明。</p> <p>有同学认为，我们可以假设<code>foo</code>方法耗时较长（毕竟 10^9 次加法），因此<code>main</code>方法的解释执行并不会对最终计算得出的性能数据造成太大影响。上面这段代码在我的机器上测出的结果是，每 1000 次<code>foo</code>方法调用在 20 微秒左右。</p> <p>这是否意味着，我这台机器的 CPU 已经远超它的物理限制，其频率达到 100,000,000 GHz  了。（假设循环主体就两条指令，每时钟周期指令数 [1] 为 1。）这显然是不可能的，目前 CPU 单核的频率大概在 2-5 GHz  左右，再怎么超频也不可能提升七八个数量级。</p> <p>你应该能够猜到，这和即时编译器的循环优化有关。下面便是<code>foo</code>方法的编译结果。我们可以看到，它将直接返回 10^9，而不是循环 10^9 次，并在循环中重复进行加法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+0x8aa0: sub    rsp,0x18                 // 创建方法栈桢
+
+0x8aa7: mov    QWORD PTR [rsp+0x10],rbp // 无关指令
+
+0x8aac: mov    eax,0x3b9aca00           // return 10^9
+
+0x8ab1: add    rsp,0x10                 // 弹出方法栈桢
+
+0x8ab5: pop    rbp                      // 无关指令
+
+0x8ab6: mov    r10,QWORD PTR [r15+0x70] // 安全点测试
+
+0x8aba: test   DWORD PTR [r10],eax      // 安全点测试
+
+0x8abd: ret
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><blockquote><p>之前我忘记解释所谓的”无关指令“是什么意思。我指的是该指令和具体的代码逻辑无关。即时编译器生成的代码可能会将 RBP  寄存器作为通用寄存器，从而是寄存器分配算法有更多的选择。由于调用者（caller）未必保存了 RBP  寄存器的值，所以即时编译器会在进入被调用者（callee）时保存 RBP 的值，并在退出被调用者时复原 RBP 的值。</p></blockquote> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int foo() {
+
+  int i = 0;
+
+  while (i &lt; 1_000_000_000) {
+
+    i++;
+
+  }
+
+  return i;
+
+}
+
+// 优化为
+
+static int foo() {
+
+  return 1_000_000_000;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>该循环优化并非循环展开。在默认情况下，即时编译器仅能将循环展开 60 次（对应虚拟机参数<code>-XX:LoopUnrollLimit</code>）。实际上，在介绍循环优化那篇文章中，我并没有提及这个优化。因为该优化实在是太过于简单，几乎所有开发人员都能够手工对其进行优化。</p> <p>在即时编译器中，它是一个基于计数循环的优化。我们也已经学过计数循环的知识。也就是说，只要将循环变量<code>i</code>改为 long 类型，便可以“避免”这个优化。</p> <p>关于操作系统和硬件系统所带来的影响，一个较为常见的例子便是电源管理策略。在许多机器，特别是笔记本上，操作系统会动态配置 CPU 的频率。而 CPU 的频率又直接影响到性能测试的数据，因此短时间的性能测试得出的数据未必可靠。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/index-24a58d.jpg" alt="index"></p> <p>例如我的笔记本，在刚开始进行性能评测时，单核频率可以达到 4.0 GHz。而后由于 CPU 温度升高，频率便被限制在 3.0 GHz 了。</p> <p>除了电源管理之外，CPU 缓存、分支预测器 [2]，以及超线程技术 [3]，都会对测试结果造成影响。</p> <p>就 CPU 缓存而言，如果程序的数据本地性较好，那么它的性能指标便会非常好；如果程序存在 false sharing 的问题，即几个线程写入内存中属于同一缓存行的不同部分，那么它的性能指标便会非常糟糕。</p> <p>超线程技术是另一个可能误导性能测试工具的因素。我们知道，超线程技术将为每个物理核心虚拟出两个虚拟核心，从而尽可能地提高物理核心的利用率。如果性能测试的两个线程被安排在同一物理核心上，那么得到的测试数据显然要比被安排在不同物理核心上的数据糟糕得多。</p> <p>总而言之，性能基准测试存在着许多深坑（pitfall）。然而，除了性能测试专家外，大多数开发人员都没有足够全面的知识，能够绕开这些坑，因而得出的性能测试数据很有可能是有偏差的（biased）。</p> <p>下面我将介绍 OpenJDK 中的开源项目 JMH[4]（Java Microbenchmark Harness）。JMH 是一个面向  Java 语言或者其他 Java  虚拟机语言的性能基准测试框架。它针对的是纳秒级别（出自官网介绍，个人觉得精确度没那么高）、微秒级别、毫秒级别，以及秒级别的性能测试。</p> <p>由于许多即时编译器的开发人员参与了该项目，因此 JMH 内置了许多功能来控制即时编译器的优化。对于其他影响性能评测的因素，JMH 也提供了不少策略来降低影响，甚至是彻底解决。</p> <p>因此，使用这个性能基准测试框架的开发人员，可以将精力完全集中在所要测试的业务逻辑，并以最小的代价控制除了业务逻辑之外的可能影响性能的因素。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial experiments, perform baseline and negative tests that provide experimental control, make sure the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts. Do not assume the numbers tell you what you want them to tell.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>不过，JMH 也不能完美解决性能测试数据的偏差问题。它甚至会在每次运行的输出结果中打印上述语句，所以，JMH 的开发人员也给出了一个小忠告：我们开发人员不要轻信 JMH 的性能测试数据，不要基于这些数据乱下结论。</p> <p>通常来说，性能基准测试的结果反映的是所测试的业务逻辑在所运行的 Java 虚拟机，操作系统，硬件系统这一组合上的性能指标，而根据这些性能指标得出的通用结论则需要经过严格论证。</p> <p>在理解（或忽略）了 JMH 的忠告后，我们下面便来看看如何使用 JMH。</p> <h2 id="生成-jmh-项目"><a href="#生成-jmh-项目" class="header-anchor">#</a> 生成 JMH 项目</h2> <p>JMH 的使用方式并不复杂。我们可以借助 JMH 部署在 maven 上的 archetype，生成预设好依赖关系的 maven 项目模板。具体的命令如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ mvn archetype:generate \
+
+          -DinteractiveMode=false \
+
+          -DarchetypeGroupId=org.openjdk.jmh \
+
+          -DarchetypeArtifactId=jmh-java-benchmark-archetype \
+
+          -DgroupId=org.sample \
+
+          -DartifactId=test \
+
+          -Dversion=1.21
+
+$ cd test
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>该命令将在当前目录下生成一个<code>test</code>文件夹（对应参数<code>-DartifactId=test</code>，可更改），其中便包含了定义该 maven 项目依赖的<code>pom.xml</code>文件，以及自动生成的测试文件<code>src/main/org/sample/MyBenchmark.java</code>（这里<code>org/sample</code>对应参数<code>-DgroupId=org.sample</code>，可更改）。后者的内容如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+/*
+
+ * Copyright ...
+
+ */
+
+package org.sample;
+
+ 
+
+import org.openjdk.jmh.annotations.Benchmark;
+
+ 
+
+public class MyBenchmark {
+
+ 
+
+    @Benchmark
+
+    public void testMethod() {
+
+        // This is a demo/sample template for building your JMH benchmarks. Edit as needed.
+
+        // Put your benchmark code here.
+
+    }
+
+ 
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br></div></div><p>这里面，类名<code>MyBenchmark</code>以及方法名<code>testMethod</code>并不重要，你可以随意更改。真正重要的是<code>@Benchmark</code>注解。被它标注的方法，便是 JMH 基准测试的测试方法。该测试方法默认是空的。我们可以填入需要进行性能测试的业务逻辑。</p> <p>举个例子，我们可以测量新建异常对象的性能，如下述代码所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+@Benchmark
+
+public void testMethod() {
+
+  new Exception();
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>通常来说，我们不应该使用这种貌似会被即时编译器优化掉的代码（在下篇中我会介绍 JMH 的<code>Blackhole</code>功能）。</p> <p>不过，我们已经学习过逃逸分析了，知道 native 方法调用的调用者或者参数会被识别为逃逸。而<code>Exception</code>的构造器将间接调用至 native 方法<code>fillInStackTrace</code>中，并且该方法调用的调用者便是新建的<code>Exception</code>对象。因此，逃逸分析将判定该新建对象逃逸，而即时编译器也无法优化掉原本的新建对象操作。</p> <p>当<code>Exception</code>的构造器返回时，Java 虚拟机将不再拥有指向这一新建对象的引用。因此，该新建对象可以被垃圾回收。</p> <h2 id="编译和运行-jmh-项目"><a href="#编译和运行-jmh-项目" class="header-anchor">#</a> 编译和运行 JMH 项目</h2> <p>在上一篇介绍注解处理器时，我曾提到过，JMH 正是利用注解处理器 [5] 来自动生成性能测试的代码。实际上，除了<code>@Benchmark</code>之外，JMH 的注解处理器还将处理所有位于<code>org.openjdk.jmh.annotations</code>包 [6] 下的注解。（其他注解我们会在下一篇中详细介绍。）</p> <p>我们可以运行<code>mvn compile</code>命令来编译这个 maven 项目。该命令将生成<code>target</code>文件夹，其中的<code>generated-sources</code>目录便存放着由 JMH 的注解处理器所生成的 Java 源代码：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ mvn compile
+
+$ ls target/generated-sources/annotations/org/sample/generated/
+
+MyBenchmark_jmhType.java            MyBenchmark_jmhType_B1.java         MyBenchmark_jmhType_B2.java         MyBenchmark_jmhType_B3.java         MyBenchmark_testMethod_jmhTest.java
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>在这些源代码里，所有以<code>MyBenchmark_jmhType</code>为前缀的 Java 类都继承自<code>MyBenchmark</code>。这是注解处理器的常见用法，即通过生成子类来将注解所带来的额外语义扩张成方法。</p> <p>具体来说，它们之间的继承关系是<code>MyBenchmark_jmhType -&gt; B3 -&gt; B2 -&gt; B1 -&gt; MyBenchmark</code>（这里<code>A -&gt; B</code>代表 A 继承 B）。其中，B2 存放着 JMH 用来控制基准测试的各项字段。</p> <p>为了避免这些控制字段对<code>MyBenchmark</code>类中的字段造成 false sharing 的影响，JMH 生成了 B1 和 B3，分别存放了 256 个 boolean 字段，从而避免 B2 中的字段与<code>MyBenchmark</code>类、<code>MyBenchmark_jmhType</code>类中的字段（或内存里下一个对象中的字段）会出现在同一缓存行中。</p> <blockquote><p>之所以不能在同一类中安排这些字段，是因为 Java 虚拟机的字段重排列。而类之间的继承关系，便可以避免不同类所包含的字段之间的重排列。</p></blockquote> <p>除了这些<code>jmhType</code>源代码外，<code>generated-sources</code>目录还存放着真正的性能测试代码<code>MyBenchmark_testMethod_jmhTest.java</code>。当进行性能测试时，Java 虚拟机所运行的代码很有可能便是这一个源文件中的热循环经过 OSR 编译过后的代码。</p> <blockquote><p>在通过 CompileCommand 分析即时编译后的机器码时，我们需要关注的其实是<code>MyBenchmark_testMethod_jmhTest</code>中的方法。</p></blockquote> <p>由于这里面的内容过于复杂，我将在下一篇中介绍影响该生成代码的众多功能性注解，这里就不再详细进行介绍了。</p> <p>接下来，我们可以运行<code>mvn package</code>命令，将编译好的 class 文件打包成 jar 包。生成的 jar 包同样位于<code>target</code>目录下，其名字为<code>benchmarks.jar</code>。jar 包里附带了一系列配置文件，如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ mvn package
+
+ 
+
+$ jar tf target/benchmarks.jar META-INF
+
+META-INF/MANIFEST.MF
+
+META-INF/
+
+META-INF/BenchmarkList
+
+META-INF/CompilerHints
+
+META-INF/maven/
+
+META-INF/maven/org.sample/
+
+META-INF/maven/org.sample/test/
+
+META-INF/maven/org.sample/test/pom.xml
+
+META-INF/maven/org.sample/test/pom.properties
+
+META-INF/maven/org.openjdk.jmh/
+
+META-INF/maven/org.openjdk.jmh/jmh-core/
+
+META-INF/maven/org.openjdk.jmh/jmh-core/pom.xml
+
+META-INF/maven/org.openjdk.jmh/jmh-core/pom.properties
+
+META-INF/maven/net.sf.jopt-simple/
+
+META-INF/maven/net.sf.jopt-simple/jopt-simple/
+
+META-INF/maven/net.sf.jopt-simple/jopt-simple/pom.xml
+
+META-INF/maven/net.sf.jopt-simple/jopt-simple/pom.properties
+
+META-INF/LICENSE.txt
+
+META-INF/NOTICE.txt
+
+META-INF/maven/org.apache.commons/
+
+META-INF/maven/org.apache.commons/commons-math3/
+
+META-INF/maven/org.apache.commons/commons-math3/pom.xml
+
+META-INF/maven/org.apache.commons/commons-math3/pom.properties
+
+ 
+
+$ unzip -c target/benchmarks.jar META-INF/MANIFEST.MF
+
+Archive:  target/benchmarks.jar
+
+  inflating: META-INF/MANIFEST.MF    
+
+Manifest-Version: 1.0
+
+Archiver-Version: Plexus Archiver
+
+Created-By: Apache Maven 3.5.4
+
+Built-By: zhengy
+
+Build-Jdk: 10.0.2
+
+Main-Class: org.openjdk.jmh.Main
+
+ 
+
+$ unzip -c target/benchmarks.jar META-INF/BenchmarkList
+
+Archive:  target/benchmarks.jar
+
+  inflating: META-INF/BenchmarkList  
+
+JMH S 22 org.sample.MyBenchmark S 51 org.sample.generated.MyBenchmark_testMethod_jmhTest S 10 testMethod S 10 Throughput E A 1 1 1 E E E E E E E E E E E E E E E E E
+
+ 
+
+$ unzip -c target/benchmarks.jar META-INF/CompilerHints
+
+Archive:  target/benchmarks.jar
+
+  inflating: META-INF/CompilerHints  
+
+dontinline,*.*_all_jmhStub
+
+dontinline,*.*_avgt_jmhStub
+
+dontinline,*.*_sample_jmhStub
+
+dontinline,*.*_ss_jmhStub
+
+dontinline,*.*_thrpt_jmhStub
+
+inline,org/sample/MyBenchmark.testMethod
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br></div></div><p>这里我展示了其中三个比较重要的配置文件。</p> <ol><li><code>MANIFEST.MF</code>中指定了该 jar 包的默认入口，即<code>org.openjdk.jmh.Main</code>[7]。</li> <li><code>BenchmarkList</code>中存放了测试配置。该配置是根据<code>MyBenchmark.java</code>里的注解自动生成的，具体我会在下一篇中详细介绍源代码中如何配置。</li> <li><code>CompilerHints</code>中存放了传递给 Java 虚拟机的<code>-XX:CompileCommandFile</code>参数的内容。它规定了无法内联以及必须内联的几个方法，其中便有存放业务逻辑的测试方法<code>testMethod</code>。</li></ol> <p>在编译<code>MyBenchmark_testMethod_jmhTest</code>类中的测试方法时，JMH 会让即时编译器强制内联对<code>MyBenchmark.testMethod</code>的方法调用，以避免调用开销。</p> <p>打包生成的 jar 包可以直接运行。具体指令如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ java -jar target/benchmarks.jar
+
+WARNING: An illegal reflective access operation has occurred
+
+...
+
+Benchmark                Mode  Cnt        Score      Error  Units
+
+MyBenchmark.testMethod  thrpt   25  1004801,393 ± 4055,462  ops/s
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>这里 JMH 会有非常多的输出，具体内容我会在下一篇中进行讲解。</p> <p>输出的最后便是本次基准测试的结果。其中比较重要的两项指标是<code>Score</code>和<code>Error</code>，分别代表本次基准测试的平均吞吐量（每秒运行<code>testMethod</code>方法的次数）以及误差范围。例如，这里的结果说明本次基准测试平均每秒生成 10^6 个异常实例，误差范围大致在 4000 个异常实例。</p> <h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我介绍了 OpenJDK 的性能基准测试项目 JMH。</p> <p>Java 程序的性能测试存在着许多深坑，有来自 Java 虚拟机的，有来自操作系统的，甚至有来自硬件系统的。如果没有足够的知识，那么性能测试的结果很有可能是有偏差的。</p> <p>性能基准测试框架 JMH 是 OpenJDK 中的其中一个开源项目。它内置了许多功能，来规避由 Java 虚拟机中的即时编译器或者其他优化对性能测试造成的影响。此外，它还提供了不少策略来降低来自操作系统以及硬件系统的影响。</p> <p>开发人员仅需将所要测试的业务逻辑通过<code>@Benchmark</code>注解，便可以让 JMH 的注解处理器自动生成真正的性能测试代码，以及相应的性能测试配置文件。</p> <hr> <p>今天的实践环节，请生成一个 JMH 项目，并且在<code>MyBenchmark.testMethod</code>方法中填入自己的业务逻辑。（除非你已经提前了解<code>@State</code>等 JMH 功能，否则请不要在<code>MyBenchmark</code>中定义实例变量。）</p> <p>[1] https://en.wikipedia.org/wiki/Instructions_per_cycle
+[2] https://en.wikipedia.org/wiki/Branch_predictor
+[3] https://en.wikipedia.org/wiki/Hyper-threading
+[4] http://openjdk.java.net/projects/code-tools/jmh/
+[5] http://hg.openjdk.java.net/code-tools/jmh/file/3769055ad883/jmh-generator-annprocess/src/main/java/org/openjdk/jmh/generators/BenchmarkProcessor.java
+[6] http://hg.openjdk.java.net/code-tools/jmh/file/3769055ad883/jmh-core/src/main/java/org/openjdk/jmh/annotations
+[7] http://hg.openjdk.java.net/code-tools/jmh/file/3769055ad883/jmh-core/src/main/java/org/openjdk/jmh/Main.java</p> <h2 id="信-1"><a href="#信-1" class="header-anchor">#</a> 信(1)</h2> <ul><li></li></ul> <p>shitao</p> <p>2018-12-26</p> <p>这篇还没留言啊，总结下自己的一点jmh测试经验吧，希望老师指导。
+\1. 最好在专门的机器上做测试而不是自己的pc
+\2. 依赖的外部资源如redis，db等，测试过程中最好是独占的
+\3. 测试时间不宜过短，我一般10min以上吧</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/1dab25/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">注解处理器</div></a> <a href="/pages/df61db/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">基准测试框架JMH（下）</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/1dab25/" class="prev">注解处理器</a></span> <span class="next"><a href="/pages/df61db/">基准测试框架JMH（下）</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/59.37d62779.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>字段访问相关优化 | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/54.2499d935.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/36.f1893ee4.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/48.41c4fd1e.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/50.2404cf28.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/58.a8c06b55.js"><link rel="prefetch" href="/assets/js/59.37d62779.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" aria-current="page" class="nav-link router-link-exact-active router-link-active">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" aria-current="page" class="nav-link router-link-exact-active router-link-active">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Java虚拟机基本原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>高效编译</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>代码优化</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/1261df/" aria-current="page" class="active sidebar-link">字段访问相关优化</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/1261df/#字段读取优化" class="sidebar-link">字段读取优化</a></li><li class="sidebar-sub-header level2"><a href="/pages/1261df/#字段存储优化" class="sidebar-link">字段存储优化</a></li><li class="sidebar-sub-header level2"><a href="/pages/1261df/#死代码消除" class="sidebar-link">死代码消除</a></li><li class="sidebar-sub-header level2"><a href="/pages/1261df/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/1261df/#精选留言-12" class="sidebar-link">精选留言(12)</a></li></ul></li><li><a href="/pages/55e20a/" class="sidebar-link">循环优化</a></li><li><a href="/pages/3c48b1/" class="sidebar-link">向量化</a></li><li><a href="/pages/1dab25/" class="sidebar-link">注解处理器</a></li><li><a href="/pages/a5ec55/" class="sidebar-link">基准测试框架JMH（上）</a></li><li><a href="/pages/df61db/" class="sidebar-link">基准测试框架JMH（下）</a></li><li><a href="/pages/c723d4/" class="sidebar-link">Java虚拟机的监控及诊断工具（命令行篇）</a></li><li><a href="/pages/402e19/" class="sidebar-link">Java虚拟机的监控及诊断工具（GUI篇）</a></li><li><a href="/pages/13ab6e/" class="sidebar-link">JNI的运行机制</a></li></ul></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96" title="分类" data-v-06225672>代码优化</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABH1JREFUSA3tVl1oHFUUPmdmd2ltklqbpJDiNnXFmgbFktho7YMPNiJSSZM0+CAYSkUELVhM6YuwIPpgoOKDqOBDC0XE2CQoNtQXBUFTTcCi+Wlh1V2TQExsUzcltd3M9Tt3ZjZzZ2fT+OJTL8yeM+eee757fmeJbq//KQL8X3DUSFOcfr7cRsRtxNQMWueeVzOkaITIGqQHNg5y8+jNW9ldM7A6nTpAjuolUikAwq7CE3WcM2RRDz+XGVgN3FptU/aUSlvq9Pa3iZ1+sgAqJyyAFqkipd9dqiwHF3P65YycLWc/6sqGrvoEoIp6DOFaX5h6+dnfjkWprwqsPk0dUGq5vySwDImC10KxFHgGL1SWoc92O3eVht09qdXNH11I2SsTsJYqMWzihqGMi+A+Garf3BAuuLI5oGlULyNfyB/HYNujwktOfRrMr5t77NmevqaUopx0grnKAyvVpmwUDB4x6FPXuGvYLTDwWsejwgtgkYKPqRJg8SV6xaiZ3ZTppGneS4yfH5/66fZSDHv+QZci/+h5c5UHtpy67JUqGppM0sh0Nc1dW6/N1W5Yoqat8/TU/VnadmdeW2PLLSyh0cvxBs3KbqTmwYPpxN4do/mzE8nEpvX/UMu2Wbp74zUAK5q6WkHns7V0eWkdPbPzd3rxkTGybadYySumVzhcaJFbs5UrEkQ/+CK8gF5dnh/6ciIZ73gwQ927L1IitoxKLXYP3SjYdOrHHfTZhRRlFyrorafPk20B3HPD1y2G3qKZME5Jcf3t/HUC13/8tSd++vqFveMUTwAUxSUFI1QekR1+bIze3D9MF2aq6cPvG72CgnldWCFqyRw3lwH8ZMerjTD9ElRO7Gv44wNpC90aASqGfVlz/Rx17srQ57/UU26hkhQqUB7dBR71WmzQhHUnblGmVOEw0jhbV1n9OlXUDCIRGaNV5Jp43N516fN7JmnTHdfp7Hgy0luO4aMhtkLL8Bi3bUWYvzh5Mn1dTxrL6QmGuRhGL/TiTTxRoEdTszSaq9GR0NGA3KdkOz3hqSV3MIDhQ5IVX/Ivx3umBti2es2h4eZby7x8br1rkf7Mo90AqC8aQ3sJeNzqFRu+vSANAQe3PL7l0HGOAdwDCeZYvNKeoZp1Qfs6Aipndh86HmFRi0LAnEO47wsqM6cdfjh3jBPUzhZy7nvlUfFsamED1VQt6aISHVymXZ/B2aCtIG8AI8xfobj2d3en1wWVhOeHELKmLQ1s211s88comkv4UCwWyF787mJdYXtNfhKAXVqnKTq8QZvGAGGOfaTo5pGZ/PwbUCr5+DPr/1J92JNHr9aOl/F3iI5+O1nfybsGxoimvZ3ViWSluDITw3P37mypheDIPY0tw7+O/5ApbkYw+zpfaUVu32Pi98+defdUhEpZkRFq0aqyNh9FuL9hpYbEm6iwi0z2REd09ZmyENEbuhjDWzKvZXTqKYaBIr3tt5kuPtQBZFvEUwHt60vfCNu41XsksH9Ij1BMMz1Y0OOunHNShFIP5868g5zeXmuLwL9T4b6Q2+KejgAAAABJRU5ErkJggg==">字段访问相关优化<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_24-字段访问相关优化"><a href="#_24-字段访问相关优化" class="header-anchor">#</a> 24 | 字段访问相关优化</h1> <p>在上一篇文章中，我介绍了逃逸分析，也介绍了基于逃逸分析的优化方式锁消除、栈上分配以及标量替换等内容。</p> <p>其中的标量替换，可以看成将对象本身拆散为一个个字段，并把原本对对象字段的访问，替换为对一个个局部变量的访问。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Foo {
+
+  int a = 0;
+
+}
+
+ 
+
+static int bar(int x) {
+
+  Foo foo = new Foo();
+
+  foo.a = x;
+
+  return foo.a;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>举个例子，上面这段代码中的<code>bar</code>方法，经过逃逸分析以及标量替换后，其优化结果如下所示。（确切地说，是指所生成的 IR 图与下述代码所生成的 IR 图类似。之后不再重复解释。）</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(int x) {
+
+  int a = x;
+
+  return a;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>由于 Sea-of-Nodes IR 的特性，局部变量不复存在，取而代之的是一个个值。在例子对应的 IR 图中，返回节点将直接返回所输入的参数。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531145134322-5b5c65.png" alt="image-20220531145134322"></p> <p><strong>经过标量替换的<code>bar</code>方法</strong></p> <p>下面我列举了<code>bar</code>方法经由 C2 即时编译生成的机器码（这里略去了指令地址的前 48 位）。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+  # {method} 'bar' '(I)I' in 'FieldAccessTest'
+
+  # parm0:    rsi       = int             // 参数 x
+
+  #           [sp+0x20]  (sp of caller)
+
+0x06a0: sub    rsp,0x18                   // 创建方法栈桢
+
+0x06a7: mov    QWORD PTR [rsp+0x10],rbp   // 无关指令
+
+0x06ac: mov    eax,esi                    // 将参数 x 存入返回值 eax 中
+
+0x06ae: add    rsp,0x10                   // 弹出方法栈桢
+
+0x06b2: pop    rbp                        // 无关指令
+
+0x06b3: mov    r10,QWORD PTR [r15+0x70]   // 安全点测试
+
+0x06b7: test   DWORD PTR [r10],eax        // 安全点测试
+
+0x06ba: ret
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><blockquote><p>在 X86_64 的机器码中，每当使用 call 指令进入目标方法的方法体中时，我们需要在栈上为当前方法分配一块内存作为其栈桢。而在退出该方法时，我们需要弹出当前方法所使用的栈桢。</p></blockquote> <blockquote><p>由于寄存器 rsp 维护着当前线程的栈顶指针，因此这些操作都是通过增减寄存器 rsp 来实现的，即上面这段机器码中偏移量为 0x06a0 以及 0x06ae 的指令。</p></blockquote> <blockquote><p>在介绍安全点（safepoint）时我曾介绍过，HotSpot 虚拟机的即时编译器将在方法返回时插入安全点测试指令，即图中偏移量为 0x06b3 以及 0x06ba 的指令。其中真正的安全点测试是 0x06b7 指令。</p></blockquote> <blockquote><p>如果虚拟机需要所有线程都到达安全点，那么该 test 指令所访问的内存地址所在的页将被标记为不可访问，而该指令也将触发 segfault，并借由 segfault 处理器进入安全点之中。通常，该指令会附带<code>; {poll_return}</code>这样子的注释，这里被我略去了。</p></blockquote> <blockquote><p>在 X8_64 中，前几个传入参数会被放置于寄存器中，而返回值则需要存放在 rax 寄存器中。有时候你会看到返回值被存入 eax  寄存器中，这其实是同一个寄存器，只不过 rax 表示 64 位寄存器，而 eax 表示 32 位寄存器。具体可以参考 x86 calling  conventions[1]。</p></blockquote> <p>当忽略掉创建、弹出方法栈桢，安全点测试以及其他无关指令之后，所剩下的方法体就只剩下偏移量为 0x06ac 的 mov 指令，以及  0x06ba 的 ret 指令。前者将所传入的 int 型参数 x 移至代表返回值的 eax 寄存器中，后者是退出当前方法并返回至调用者中。</p> <p>虽然在部分情况下，逃逸分析以及基于逃逸分析的优化已经十分高效了，能够将代码优化到极其简单的地步，但是逃逸分析毕竟不是 Java 虚拟机的银色子弹。</p> <p>在现实中，Java 程序中的对象或许本身便是逃逸的，或许因为方法内联不够彻底而被即时编译器当成是逃逸的。这两种情况都将导致即时编译器无法进行标量替换。这时候，针对对象字段访问的优化也变得格外重要起来。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  o.a = x;
+
+  return o.a;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>在上面这段代码中，对象<code>o</code>是传入参数，不属于逃逸分析的范围（Java 虚拟机中的逃逸分析针对的是新建对象）。该方法会将所传入的 int 型参数<code>x</code>的值存储至实例字段<code>Foo.a</code>中，然后再读取并返回同一字段的值。</p> <p>这段代码将涉及两次内存访问操作：存储以及读取实例字段<code>Foo.a</code>。我们可以轻易地将其手工优化为直接读取并返回传入参数 x 的值。由于这段代码较为简单，因此它极大可能被编译为寄存器之间的移动指令（即将输入参数<code>x</code>的值移至寄存器 eax 中）。这与原本的内存访问指令相比，显然要高效得多。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  o.a = x;
+
+  return x;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>那么即时编译器是否能够作出类似的自动优化呢？</p> <h2 id="字段读取优化"><a href="#字段读取优化" class="header-anchor">#</a> 字段读取优化</h2> <p>答案是可以的。即时编译器会优化实例字段以及静态字段访问，以减少总的内存访问数目。具体来说，它将沿着控制流，缓存各个字段存储节点将要存储的值，或者字段读取节点所得到的值。</p> <p>当即时编译器遇到对同一字段的读取节点时，如果缓存值还没有失效，那么它会将读取节点替换为该缓存值。</p> <p>当即时编译器遇到对同一字段的存储节点时，它会更新所缓存的值。当即时编译器遇到可能更新字段的节点时，如方法调用节点（在即时编译器看来，方法调用会执行未知代码），或者内存屏障节点（其他线程可能异步更新了字段），那么它会采取保守的策略，舍弃所有缓存值。</p> <p>在前面的例子中，我们见识了缓存字段存储节点的情况。下面我们来看一下缓存字段读取节点的情况。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  int y = o.a + x;
+
+  return o.a + y;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>在上面这段代码中，实例字段<code>Foo.a</code>将被读取两次。即时编译器会将第一次读取的值缓存起来，并且替换第二次字段读取操作，以节省一次内存访问。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  int t = o.a;
+
+  int y = t + x;
+
+  return t + y;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>如果字段读取节点被替换成一个常量，那么它将进一步触发更多优化。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  o.a = 1;
+
+  if (o.a &gt;= 0)
+
+    return x;
+
+  else
+
+    return -x;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><p>例如在上面这段代码中，实例字段<code>Foo.a</code>会被赋值为 1。接下来的 if 语句将判断同一实例字段是否不小于 0。经过字段读取优化之后，<code>&gt;=</code>节点的两个输入参数分别为常数 1 和 0，因此可以直接替换为具体结果<code>true</code>。如此一来，else 分支将变成不可达代码，可以直接删除，其优化结果如下所示。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+static int bar(Foo o, int x) {
+
+  o.a = 1;
+
+  return x;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>我们再来看另一个例子。下面这段代码的<code>bar</code>方法中，实例字段<code>a</code>会被赋值为<code>true</code>，后面紧跟着一个以<code>a</code>为条件的 while 循环。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Foo {
+
+  boolean a;
+
+  void bar() {
+
+    a = true;
+
+    while (a) {}
+
+  }
+
+  void whatever() { a = false; }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>同样，即时编译器会将 while 循环中读取实例字段<code>a</code>的操作直接替换为常量<code>true</code>，即下面代码所示的死循环。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+  void bar() {
+
+    a = true;
+
+    while (true) {}
+
+  }
+
+// 生成的机器码将陷入这一死循环中
+
+0x066b: mov    r11,QWORD PTR [r15+0x70] // 安全点测试
+
+0x066f: test   DWORD PTR [r11],eax      // 安全点测试
+
+0x0672: jmp    0x066b                   // while (true)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>在介绍 Java 内存模型时，我们便知道可以通过 volatile 关键字标记实例字段<code>a</code>，以此强制对它的读取。</p> <p>实际上，即时编译器将在 volatile 字段访问前后插入内存屏障节点。这些内存屏障节点会阻止即时编译器将屏障之前所缓存的值用于屏障之后的读取节点之上。</p> <p>就我们的例子而言，尽管在 X86_64 平台上，volatile 字段读取操作前后的内存屏障是 no-op，在即时编译过程中的屏障节点，还是会阻止即时编译器的字段读取优化，强制在循环中使用内存读取指令访问实例字段<code>Foo.a</code>的最新值。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+0x00e0: movzx  r11d,BYTE PTR [rbx+0xc]   // 读取 a
+
+0x00e5: mov    r10,QWORD PTR [r15+0x70]  // 安全点测试
+
+0x00e9: test   DWORD PTR [r10],eax       // 安全点测试
+
+0x00ec: test   r11d,r11d                 // while (a)
+
+0x00ef: jne    0x00e0                    // while (a)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>同理，加锁、解锁操作也同样会阻止即时编译器的字段读取优化。</p> <h2 id="字段存储优化"><a href="#字段存储优化" class="header-anchor">#</a> 字段存储优化</h2> <p>除了字段读取优化之外，即时编译器还将消除冗余的存储节点。如果一个字段先后被存储了两次，而且这两次存储之间没有对第一次存储内容的读取，那么即时编译器可以将第一个字段存储给消除掉。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Foo {
+
+  int a = 0;
+
+  void bar() {
+
+    a = 1;
+
+    a = 2;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><p>举例来说，上面这段代码中的<code>bar</code>方法先后存储了两次<code>Foo.a</code>实例字段。由于第一次存储之后没有读取<code>Foo.a</code>的值，因此，即时编译器会将其看成冗余存储，并将之消除掉，生成如下代码：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+  void bar() {
+
+    a = 2;
+
+  }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>实际上，即便是在这两个字段存储操作之间读取该字段，即时编译器还是有可能在字段读取优化的帮助下，将第一个存储操作当成冗余存储给消除掉。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+class Foo {
+
+  int a = 0;
+
+  void bar() {
+
+    a = 1;
+
+    int t = a;
+
+    a = t + 2;
+
+  }
+
+}
+
+// 优化为
+
+class Foo {
+
+  int a = 0;
+
+  void bar() {
+
+    a = 1;
+
+    int t = 1;
+
+    a = t + 2;
+
+  }
+
+}
+
+// 进一步优化为
+
+class Foo {
+
+  int a = 0;
+
+  void bar() {
+
+    a = 3;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div></div><p>当然，如果所存储的字段被标记为 volatile，那么即时编译器也不能将冗余的存储操作消除掉。</p> <p>这种情况看似很蠢，但实际上并不少见，比如说两个存储之间隔着许多其他代码，或者因为方法内联的缘故，将两个存储操作（如构造器中字段的初始化以及随后的更新）纳入同一个编译单元里。</p> <h2 id="死代码消除"><a href="#死代码消除" class="header-anchor">#</a> 死代码消除</h2> <p>除了字段存储优化之外，局部变量的死存储（dead store）同样也涉及了冗余存储。这是死代码消除（dead code eliminiation）的一种。不过，由于 Sea-of-Nodes IR 的特性，死存储的优化无须额外代价。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(int x, int y) {
+
+  int t = x*y;
+
+  t = x+y;
+
+  return t;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>上面这段代码涉及两个存储局部变量操作。当即时编译器将其转换为 Sea-of-Nodes IR 之后，没有节点依赖于 t 的第一个值<code>x*y</code>。因此，该乘法运算将被消除，其结果如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(int x, int y) {
+
+  return x+y;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>死存储还有一种变体，即在部分程序路径上有冗余存储。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(boolean f, int x, int y) {
+
+  int t = x*y;
+
+  if (f)
+
+    t = x+y;
+
+  return t;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>举个例子，上面这段代码中，如果所传入的 boolean 类型的参数<code>f</code>是<code>true</code>，那么在程序执行路径上将先后进行两次对局部变量<code>t</code>的存储。</p> <p>同样，经过 Sea-of-Nodes IR 转换之后，返回节点所依赖的值是一个 phi 节点，将根据程序路径选择<code>x+y</code>或者<code>x*y</code>。也就是说，当<code>f</code>为<code>true</code>的程序路径上的乘法运算会被消除，其结果如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(boolean f, int x, int y) {
+
+  int t;
+
+  if (f)
+
+    t = x+y;
+
+  else
+
+    t = x*y;
+
+  return t;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>另一种死代码消除则是不可达分支消除。不可达分支就是任何程序路径都不可到达的分支，我们之前已经多次接触过了。</p> <p>在即时编译过程中，我们经常因为方法内联、常量传播以及基于 profile 的优化等，生成许多不可达分支。通过消除不可达分支，即时编译器可以精简数据流，并且减少编译时间以及最终生成机器码的大小。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(int x) {
+
+  if (false)
+
+    return x;
+
+  else
+
+    return -x;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>举个例子，在上面的代码中，if 语句将一直跳转至 else 分支之中。因此，另一不可达分支可以直接消除掉，形成下面的代码：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(int x) {
+
+  return -x;
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我介绍了即时编译器关于字段访问的优化方式，以及死代码消除。</p> <p>即时编译器将沿着控制流缓存字段存储、读取的值，并在接下来的字段读取操作时直接使用该缓存值。</p> <p>这要求生成缓存值的访问以及使用缓存值的读取之间没有方法调用、内存屏障，或者其他可能存储该字段的节点。</p> <p>即时编译器还会优化冗余的字段存储操作。如果一个字段的两次存储之间没有对该字段的读取操作、方法调用以及内存屏障，那么即时编译器可以将第一个冗余的存储操作给消除掉。</p> <p>此外，我还介绍了死代码消除的两种形式。第一种是局部变量的死存储消除以及部分死存储消除。它们可以通过转换为 Sea-of-Nodes IR 来完成。第二种则是不可达分支。通过消除不可达分支，即时编译器可以精简数据流，并且减少编译时间以及最终生成机器码的大小。</p> <p>今天的实践环节，请思考即时编译器会怎么优化下面代码中的除法操作？</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+int bar(int x, int y) {
+
+  int t = x/y;
+
+  t = x+y;
+
+  return t;
+
+}
+
+ 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>[1]  https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI</p> <h2 id="精选留言-12"><a href="#精选留言-12" class="header-anchor">#</a> 精选留言(12)</h2> <ul><li></li></ul> <p>qpm</p> <p>2018-09-20</p> <p>1</p> <p>老师，请问一下，读这个专栏有点像涨视野的感觉，暂时来说对我看代码提供了新的灵感，但目前只能听，没法提问，这种感觉是是因为我底子不够么？还是我实践得比较少？</p> <p>作者回复: 按照自己的节奏学习就好啦，等以后遇到问题了也可以回来提问的。</p> <ul><li></li></ul> <p>永烁星光</p> <p>2018-09-17</p> <p>1</p> <p>希望老师推荐一本 JVM 书籍，（除了《深入理解java 虚拟机》，因为我发现最新出版也是2013年的）</p> <ul><li></li></ul> <p>三木子</p> <p>2018-09-14</p> <p>1</p> <p>除法操作直接消除，返回return x+y;  ？</p> <p>作者回复: 消除不了，有位同学答出来了，有除零异常</p> <ul><li></li></ul> <p>Scott</p> <p>2018-09-14</p> <p>1</p> <p>&quot;其中真正的安全点测试是 0x06ba 指令&quot;应该是0x06b7指令</p> <p>作者回复: 多谢指出！已修改！</p> <ul><li></li></ul> <p>xingoo</p> <p>2019-05-20</p> <p>字段缓存
+存储优化
+死代码消除:冗余代码，不可达代码</p> <ul><li></li></ul> <p>『LHCY』</p> <p>2019-01-14</p> <p>不知道现在发还会不会回复。
+while（a.flag）{
+System.out.println();
+}
+这种方式，在flag没有被volatile多线程方式修改flag=false会退出循环，是因为打印函数中的锁阻止了字段优化吗</p> <ul><li></li></ul> <p>誓言的梦</p> <p>2018-12-19</p> <p>有除零的异常 是通过什么手段/机制知道 还是写死的除法不能优化  或者回不回是通过 检测当输入除数为0就不优化  输入不为0时才优化</p> <ul><li></li></ul> <p>o</p> <p>2018-10-05</p> <p>大佬，可否专门开一章讲讲对象的属性会在那些时候触发更新主存/用户内存？分别是单线程不同方法，多线程不同方法、多线程相同方法。是否和方法体大小也有关系？例如就是在该篇文章中，如果while的代码块足够简单就会形成死循环，但是如果加了输出语句就不会（之前测试volatile关键字的时候遇到过，晚点贴一下主要代码🙏）</p> <ul><li></li></ul> <p>永烁星光</p> <p>2018-09-14</p> <p>Return x+y ；</p> <p>作者回复: 课后实践中的除法无法优化，因为可能存在除零异常。即时编译器需要判断除数是否为0</p> <ul><li></li></ul> <p>Void_seT</p> <p>2018-09-14</p> <p>因为x/y会有除0异常，这部分代码是否会被优化掉，不太确定，望老师指点。</p> <p>作者回复: 对的，因为有除0异常所以编译器没法优化掉这个除法</p> <ul><li></li></ul> <p>Scott</p> <p>2018-09-14</p> <p>这一篇洋洋洒洒，其实覆盖了更多后端优化的算法，是否可以罗列一下对应算法名称供参考？</p> <p>作者回复: 我记得就叫read elimination和write elimination。第三节的是dead store elimination和partial redundancy elimination。</p> <p>Graal的相关代码在PEReadEliminationClosure以及ReadEliminationClosure中。可以自行阅读。</p> <ul><li></li></ul> <p>三木子</p> <p>2018-09-14</p> <p>感觉写代码的能力水平跟编译器优化工作量还是有点关系的。</p> <p>作者回复: 一般我们写代码都会在保持代码可读性的同时，尽量减少编译器工作量</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/2e8fbc/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">逃逸分析</div></a> <a href="/pages/55e20a/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">循环优化</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/2e8fbc/" class="prev">逃逸分析</a></span> <span class="next"><a href="/pages/55e20a/">循环优化</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/54.2499d935.js" defer></script>
+  </body>
+</html>

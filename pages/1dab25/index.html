@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>注解处理器 | ily55421</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132133.ico">
+    <script language="javascript" type="text/javascript" src="/js/pgmanor-self.js"></script>
+    <meta name="description" content="💻学习📝记录🔗分享
+学无止境是永远前进的基础，跃然纸上是对知识的总结交代，与众分享则是实现价值的最好方式。">
+    <meta name="keywords" content="ily55421,golang,vue,go-web,go-admin,go-ldap-admin">
+    <meta name="theme-color" content="#11a8cd">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <link rel="preload" href="/assets/css/0.styles.e926d81b.css" as="style"><link rel="preload" href="/assets/js/app.fb9867b2.js" as="script"><link rel="preload" href="/assets/js/4.0b71a357.js" as="script"><link rel="preload" href="/assets/js/58.a8c06b55.js" as="script"><link rel="prefetch" href="/assets/js/10.8569c4d2.js"><link rel="prefetch" href="/assets/js/11.e26e70ae.js"><link rel="prefetch" href="/assets/js/12.5caadb62.js"><link rel="prefetch" href="/assets/js/13.0f33160e.js"><link rel="prefetch" href="/assets/js/14.c9744c44.js"><link rel="prefetch" href="/assets/js/15.6b89865c.js"><link rel="prefetch" href="/assets/js/16.c01c2652.js"><link rel="prefetch" href="/assets/js/17.caf219c1.js"><link rel="prefetch" href="/assets/js/18.60e84722.js"><link rel="prefetch" href="/assets/js/19.940ccec9.js"><link rel="prefetch" href="/assets/js/20.3cc9bf4b.js"><link rel="prefetch" href="/assets/js/21.d082b3c1.js"><link rel="prefetch" href="/assets/js/22.841acbce.js"><link rel="prefetch" href="/assets/js/23.23022261.js"><link rel="prefetch" href="/assets/js/24.3ec1fd07.js"><link rel="prefetch" href="/assets/js/25.8ddbae23.js"><link rel="prefetch" href="/assets/js/26.6213b42b.js"><link rel="prefetch" href="/assets/js/27.471c0a5a.js"><link rel="prefetch" href="/assets/js/28.701748d4.js"><link rel="prefetch" href="/assets/js/29.043790de.js"><link rel="prefetch" href="/assets/js/30.06b69987.js"><link rel="prefetch" href="/assets/js/31.d27e1460.js"><link rel="prefetch" href="/assets/js/32.3c967605.js"><link rel="prefetch" href="/assets/js/33.53ed9018.js"><link rel="prefetch" href="/assets/js/34.5f4ad337.js"><link rel="prefetch" href="/assets/js/35.04748c79.js"><link rel="prefetch" href="/assets/js/36.f1893ee4.js"><link rel="prefetch" href="/assets/js/37.96d54d7b.js"><link rel="prefetch" href="/assets/js/38.6098f348.js"><link rel="prefetch" href="/assets/js/39.2a2d38af.js"><link rel="prefetch" href="/assets/js/40.138ea397.js"><link rel="prefetch" href="/assets/js/41.91d93b6f.js"><link rel="prefetch" href="/assets/js/42.0bdddd88.js"><link rel="prefetch" href="/assets/js/43.45ebb53a.js"><link rel="prefetch" href="/assets/js/44.585b965d.js"><link rel="prefetch" href="/assets/js/45.f2a336fc.js"><link rel="prefetch" href="/assets/js/46.13a92c9e.js"><link rel="prefetch" href="/assets/js/47.49063277.js"><link rel="prefetch" href="/assets/js/48.41c4fd1e.js"><link rel="prefetch" href="/assets/js/49.45a5f80b.js"><link rel="prefetch" href="/assets/js/5.377e055e.js"><link rel="prefetch" href="/assets/js/50.2404cf28.js"><link rel="prefetch" href="/assets/js/51.25ee9a8d.js"><link rel="prefetch" href="/assets/js/52.32b21a19.js"><link rel="prefetch" href="/assets/js/53.d23c7228.js"><link rel="prefetch" href="/assets/js/54.2499d935.js"><link rel="prefetch" href="/assets/js/55.7a0a6872.js"><link rel="prefetch" href="/assets/js/56.923456d2.js"><link rel="prefetch" href="/assets/js/57.7b1b5da7.js"><link rel="prefetch" href="/assets/js/59.37d62779.js"><link rel="prefetch" href="/assets/js/6.8ceb5c74.js"><link rel="prefetch" href="/assets/js/60.f5cd07d5.js"><link rel="prefetch" href="/assets/js/61.e7615374.js"><link rel="prefetch" href="/assets/js/62.82e395ec.js"><link rel="prefetch" href="/assets/js/63.9f4fdaf6.js"><link rel="prefetch" href="/assets/js/64.8493680c.js"><link rel="prefetch" href="/assets/js/65.6251b6f3.js"><link rel="prefetch" href="/assets/js/66.023f6a4e.js"><link rel="prefetch" href="/assets/js/67.df4176c9.js"><link rel="prefetch" href="/assets/js/68.f3b832d7.js"><link rel="prefetch" href="/assets/js/69.c13c591a.js"><link rel="prefetch" href="/assets/js/7.7a358565.js"><link rel="prefetch" href="/assets/js/70.7f9c5ffb.js"><link rel="prefetch" href="/assets/js/8.5accda4d.js"><link rel="prefetch" href="/assets/js/9.1b0241fd.js"><link rel="prefetch" href="/assets/js/vendors~flowchart.73e0702d.js"><link rel="prefetch" href="/assets/js/vendors~mermaid.cd604433.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e926d81b.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="https://cdn.staticaly.com/gh/eryajf/tu/main/img/image_20220720_132208.png" alt="ily55421" class="logo"> <span class="site-name can-hide">ily55421</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><!----> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法与数据结构" class="dropdown-title"><a href="/algorithm/" class="link-title">算法与数据结构</a> <span class="title" style="display:none;">算法与数据结构</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/24768e/" class="nav-link">算法</a></li><li class="dropdown-item"><!----> <a href="/pages/24770e/" class="nav-link">数据结构</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="专题" class="dropdown-title"><a href="/topic/" class="link-title">专题</a> <span class="title" style="display:none;">专题</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/a4770e/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="生活" class="dropdown-title"><a href="/life/" class="link-title">生活</a> <span class="title" style="display:none;">生活</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/bc7034/" class="nav-link">最佳实践</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="编程" class="dropdown-title"><a href="/code/" class="link-title">编程</a> <span class="title" style="display:none;">编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/ace3fe/" class="nav-link">JAVA</a></li><li class="dropdown-item"><h4>JVM</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/pages/f2e80b/" class="nav-link">Java虚拟机基本原理</a></li><li class="dropdown-subitem"><a href="/pages/bf46c5/" class="nav-link">高效编译</a></li><li class="dropdown-subitem"><a href="/pages/1261df/" class="nav-link">代码优化</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/categories/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div><div class="nav-item"><a href="/message-board/" class="nav-link">留言板</a></div><div class="nav-item"><a href="https://ily55421.github.io" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  我的博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com//" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JAVA</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JVM</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Java虚拟机基本原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>高效编译</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>代码优化</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/pages/1261df/" class="sidebar-link">字段访问相关优化</a></li><li><a href="/pages/55e20a/" class="sidebar-link">循环优化</a></li><li><a href="/pages/3c48b1/" class="sidebar-link">向量化</a></li><li><a href="/pages/1dab25/" aria-current="page" class="active sidebar-link">注解处理器</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/1dab25/#注解处理器的原理" class="sidebar-link">注解处理器的原理</a></li><li class="sidebar-sub-header level2"><a href="/pages/1dab25/#利用注解处理器生成源代码" class="sidebar-link">利用注解处理器生成源代码</a></li><li class="sidebar-sub-header level2"><a href="/pages/1dab25/#总结与实践" class="sidebar-link">总结与实践</a></li><li class="sidebar-sub-header level2"><a href="/pages/1dab25/#精选留言-14" class="sidebar-link">精选留言(14)</a></li></ul></li><li><a href="/pages/a5ec55/" class="sidebar-link">基准测试框架JMH（上）</a></li><li><a href="/pages/df61db/" class="sidebar-link">基准测试框架JMH（下）</a></li><li><a href="/pages/c723d4/" class="sidebar-link">Java虚拟机的监控及诊断工具（命令行篇）</a></li><li><a href="/pages/402e19/" class="sidebar-link">Java虚拟机的监控及诊断工具（GUI篇）</a></li><li><a href="/pages/13ab6e/" class="sidebar-link">JNI的运行机制</a></li></ul></section></li></ul></section></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-06225672><div class="articleInfo" data-v-06225672><ul class="breadcrumbs" data-v-06225672><li data-v-06225672><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-06225672></a></li> <li data-v-06225672><a href="/categories/?category=%E7%BC%96%E7%A8%8B%E4%B8%96%E7%95%8C" title="分类" data-v-06225672>编程世界</a></li><li data-v-06225672><a href="/categories/?category=JVM" title="分类" data-v-06225672>JVM</a></li><li data-v-06225672><a href="/categories/?category=%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96" title="分类" data-v-06225672>代码优化</a></li></ul> <div class="info" data-v-06225672><div title="作者" class="author iconfont icon-touxiang" data-v-06225672><a href="https://github.com/ily55421" target="_blank" title="作者" class="beLink" data-v-06225672>ily55421</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-06225672><a href="javascript:;" data-v-06225672>2022-08-17</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABKFJREFUSA3tVl1oFVcQnrMbrak3QUgkya1akpJYcrUtIqW1JvFBE9LiQ5v6JmJpolbMg32rVrhgoYK0QiMY6i9Y6EMaW5D+xFJaTYItIuK2Kr3+BJNwkxBj05sQY3b3nM6cs2dv9t7NT/vQJw/sndk5M/PNzJkzewGerP+pAmy+ON8lLzUJgA8ZYxYIYZmGYRnctDaWvJJAmTtfP1pvXsBCCPP8QFcCaRkZYACgDZFO4stNIcBCajEOlmmC9XpJ9bAGCaPaPmzPl32dvLSVu3BWCTQs0XQQ6g0DYgwLIoAZbBCdW/i+781o1VVlm/410mw4h06Y7bIPHNyWDyL4FHkX03Q8SrzNhZTZriieckWt7cL6MM85YcLpsi/7O9/iXFT6MswI0DmmpkSaJ0qLxFIm3+i1THHB3zmBH3PYx9CcykcLOeQVVa7QtdxTgQgEleX2AjHYfwA+2ddV77ruGoJUbhGDI09YSNXyMpUt5ylOzxgbUmtOp7NmbNt8v3arjTBfYELmLUV+M+nSawNNAUqpT3ClJWg5I3BLT+cGW/DXNGCa6tx1aakCGEigArTn4TDIPdrXXYKCZNrHLMCOEPvHBlLQ99s9eHB7EB6NTki73CVPQ2F5MSx/uRQixfmq7rK0wYD8w8E905bnPDfwoWs/rfv93NWN/ZfvwsLIU7A09gxECyISeGJkHAau98L97tuw7NXnoPyNF8FcYGLGKsOs0mN3OEyec9esGW/ZEl945dTP34wlR2FZVQWU1q0Cw8Tr7p+hgLLNL0FPxx/Q35mA8aEUrH6nCgwEl0tn7wUiZYJnNRh6DK4UH/k0lfyrsBKdPVv/AriGIQcEDQZ65LBAGe2Rzui9Ybjz7XUppz1/uKBbyVPGkN3ZAeC6hr0x7Nr38N5+EqkoOm17xpoqR9ohQF55ERSvr4Dkr3chNfC3DMzGJlNBElW8w9nsGQvhNGIzDkXzCg8cLK951xHsFBlTJspJNi3ZFIMF2AeDV3q8DNOB+YHi6QTrChDIWDBRi5U5f+ZMfJLu3ccrqxtdxk4SKH336LFxSmkqefwU5T8fhdSdQf9IVKD6aNiwI/hnmcAZ91isYMJIaCUCx9W098+LgruikeTqzqqxKPUwqJyCPJiyemVVZBOijDGjD38Os0jOiSPL1z3SPjXNANbiNPXAdzTfukjjuknNBbyz3nwgTd3AVFqUJ5hpHlq9MveLnWwttUfoygBmvVjuikxND3znrhsELnZk7k+OjIGxeNEkomyLVta0xxn+HZhjBc4YZ/AFjHjz9u3xRZl2BN4aq9nFwWh16IrQ1aHHEd3j1+4/dB9OtH4e29A2H1DyHQRmOSfQZ1Fy7MHBTGB6J/Djq6p3OxyO2cB+4Car7v/o3GXgfAkj23+x9ID1Teoamo/SXcbvSf2PX7Vc8DdCmE1vN9di+32P9/5YR3vLnhCVGUWBjEkr3yh4H8v9CzmsbdhzOKzsJKM90iFdaTMjRPhGVsakRvOaRidljo6H6G7j+ctrJpsP+4COhDIl0La2+FS4+5mlocBaXY5QnGZysIBYoeSsl5qQzrSj/cgNrfuEzlWBfwA+EjrZyWUvpAAAAABJRU5ErkJggg==">注解处理器<!----></h1>  <div class="theme-vdoing-content content__default"><h1 id="_27-注解处理器"><a href="#_27-注解处理器" class="header-anchor">#</a> 27 | 注解处理器</h1> <p>注解（annotation）是 Java 5 引入的，用来为类、方法、字段、参数等 Java 结构提供额外信息的机制。我先举个例子，比如，Java 核心类库中的<code>@Override</code>注解是被用来声明某个实例方法重写了父类的同名同参数类型的方法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package java.lang;
+
+ 
+
+@Target(ElementType.METHOD)
+
+@Retention(RetentionPolicy.SOURCE)
+
+public @interface Override {
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p><code>@Override</code>注解本身被另外两个元注解（即作用在注解上的注解）所标注。其中，<code>@Target</code>用来限定目标注解所能标注的 Java 结构，这里<code>@Override</code>便只能被用来标注方法。</p> <p><code>@Retention</code>则用来限定当前注解生命周期。注解共有三种不同的生命周期：<code>SOURCE</code>，<code>CLASS</code>或<code>RUNTIME</code>，分别表示注解只出现在源代码中，只出现在源代码和字节码中，以及出现在源代码、字节码和运行过程中。</p> <p>这里<code>@Override</code>便只能出现在源代码中。一旦标注了<code>@Override</code>的方法所在的源代码被编译为字节码，该注解便会被擦除。</p> <p>我们不难猜到，<code>@Override</code>仅对 Java 编译器有用。事实上，它会为 Java 编译器引入了一条新的编译规则，即如果所标注的方法不是 Java 语言中的重写方法，那么编译器会报错。而当编译完成时，它的使命也就结束了。</p> <p>我们知道，Java 的注解机制允许开发人员自定义注解。这些自定义注解同样可以为 Java  编译器添加编译规则。不过，这种功能需要由开发人员提供，并且以插件的形式接入 Java  编译器中，这些插件我们称之为注解处理器（annotation processor）。</p> <p>除了引入新的编译规则之外，注解处理器还可以用于修改已有的 Java 源文件（不推荐），或者生成新的 Java 源文件。下面，我将用几个案例来详细阐述注解处理器的这些功能，以及它背后的原理。</p> <h2 id="注解处理器的原理"><a href="#注解处理器的原理" class="header-anchor">#</a> 注解处理器的原理</h2> <p>在介绍注解处理器之前，我们先来了解一下 Java 编译器的工作流程。</p> <p><img src="https://linkeq.oss-cn-chengdu.aliyuncs.com/img/2022/05/31/image-20220531145410753-6ec552.png" alt="image-20220531145410753"></p> <p>如上图所示 出处 [1]，Java 源代码的编译过程可分为三个步骤：</p> <ol><li>将源文件解析为抽象语法树；</li> <li>调用已注册的注解处理器；</li> <li>生成字节码。</li></ol> <p>如果在第 2 步调用注解处理器过程中生成了新的源文件，那么编译器将重复第 1、2 步，解析并且处理新生成的源文件。每次重复我们称之为一轮（Round）。</p> <p>也就是说，第一轮解析、处理的是输入至编译器中的已有源文件。如果注解处理器生成了新的源文件，则开始第二轮、第三轮，解析并且处理这些新生成的源文件。当注解处理器不再生成新的源文件，编译进入最后一轮，并最终进入生成字节码的第 3 步。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package foo;
+
+ 
+
+import java.lang.annotation.*;
+
+ 
+
+@Target({ ElementType.TYPE, ElementType.FIELD })
+
+@Retention(RetentionPolicy.SOURCE)
+
+public @interface CheckGetter {
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>在上面这段代码中，我定义了一个注解<code>@CheckGetter</code>。它既可以用来标注类，也可以用来标注字段。此外，它和<code>@Override</code>相同，其生命周期被限定在源代码中。</p> <p>下面我们来实现一个处理<code>@CheckGetter</code>注解的处理器。它将遍历被标注的类中的实例字段，并检查有没有相应的<code>getter</code>方法。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+public interface Processor {
+
+ 
+
+  void init(ProcessingEnvironment processingEnv);
+
+  
+
+  Set&lt;String&gt; getSupportedAnnotationTypes();
+
+  
+
+  SourceVersion getSupportedSourceVersion();
+
+  
+
+  boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv);
+
+  
+
+  ...
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>所有的注解处理器类都需要实现接口<code>Processor</code>。该接口主要有四个重要方法。其中，<code>init</code>方法用来存放注解处理器的初始化代码。之所以不用构造器，是因为在 Java 编译器中，注解处理器的实例是通过反射 API 生成的。也正是因为使用反射 API，每个注解处理器类都需要定义一个无参数构造器。</p> <p>通常来说，当编写注解处理器时，我们不声明任何构造器，并依赖于 Java 编译器，为之插入一个无参数构造器。而具体的初始化代码，则放入<code>init</code>方法之中。</p> <p>在剩下的三个方法中，<code>getSupportedAnnotationTypes</code>方法将返回注解处理器所支持的注解类型，这些注解类型只需用字符串形式表示即可。</p> <p><code>getSupportedSourceVersion</code>方法将返回该处理器所支持的 Java 版本，通常，这个版本需要与你的 Java 编译器版本保持一致；而<code>process</code>方法则是最为关键的注解处理方法。</p> <p>JDK 提供了一个实现<code>Processor</code>接口的抽象类<code>AbstractProcessor</code>。该抽象类实现了<code>init</code>、<code>getSupportedAnnotationTypes</code>和<code>getSupportedSourceVersion</code>方法。</p> <p>它的子类可以通过<code>@SupportedAnnotationTypes</code>和<code>@SupportedSourceVersion</code>注解来声明所支持的注解类型以及 Java 版本。</p> <p>下面这段代码便是<code>@CheckGetter</code>注解处理器的实现。由于我使用了 Java 10 的编译器，因此将支持版本设置为<code>SourceVersion.RELEASE_10</code>。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package bar;
+
+ 
+
+import java.util.Set;
+
+ 
+
+import javax.annotation.processing.*;
+
+import javax.lang.model.SourceVersion;
+
+import javax.lang.model.element.*;
+
+import javax.lang.model.util.ElementFilter;
+
+import javax.tools.Diagnostic.Kind;
+
+ 
+
+import foo.CheckGetter;
+
+ 
+
+@SupportedAnnotationTypes(&quot;foo.CheckGetter&quot;)
+
+@SupportedSourceVersion(SourceVersion.RELEASE_10)
+
+public class CheckGetterProcessor extends AbstractProcessor {
+
+ 
+
+  @Override
+
+  public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) {
+
+    // TODO: annotated ElementKind.FIELD
+
+    for (TypeElement annotatedClass : ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(CheckGetter.class))) {
+
+      for (VariableElement field : ElementFilter.fieldsIn(annotatedClass.getEnclosedElements())) {
+
+        if (!containsGetter(annotatedClass, field.getSimpleName().toString())) {
+
+          processingEnv.getMessager().printMessage(Kind.ERROR,
+
+              String.format(&quot;getter not found for '%s.%s'.&quot;, annotatedClass.getSimpleName(), field.getSimpleName()));
+
+        }
+
+      }
+
+    }
+
+    return true;
+
+  }
+
+ 
+
+  private static boolean containsGetter(TypeElement typeElement, String name) {
+
+    String getter = &quot;get&quot; + name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+    for (ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+
+      if (!executableElement.getModifiers().contains(Modifier.STATIC)
+
+          &amp;&amp; executableElement.getSimpleName().toString().equals(getter)
+
+          &amp;&amp; executableElement.getParameters().isEmpty()) {
+
+        return true;
+
+      }
+
+    }
+
+    return false;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br></div></div><p>该注解处理器仅重写了<code>process</code>方法。这个方法将接收两个参数，分别代表该注解处理器所能处理的注解类型，以及囊括当前轮生成的抽象语法树的<code>RoundEnvironment</code>。</p> <p>由于该处理器针对的注解仅有<code>@CheckGetter</code>一个，而且我们并不会读取注解中的值，因此第一个参数并不重要。在代码中，我直接使用了</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+`roundEnv.getElementsAnnotatedWith(CheckGetter.class)`
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>来获取所有被<code>@CheckGetter</code>注解的类（以及字段）。</p> <p><code>process</code>方法涉及各种不同类型的<code>Element</code>，分别指代 Java 程序中的各个结构。如<code>TypeElement</code>指代类或者接口，<code>VariableElement</code>指代字段、局部变量、enum 常量等，<code>ExecutableElement</code>指代方法或者构造器。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package foo;     // PackageElement
+
+ 
+
+class Foo {      // TypeElement
+
+  int a;           // VariableElement
+
+  static int b;    // VariableElement
+
+  Foo () {}        // ExecutableElement
+
+  void setA (      // ExecutableElement
+
+    int newA         // VariableElement
+
+  ) {}
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>这些结构之间也有从属关系，如上面这段代码所示 (出处 [2]）。我们可以通过<code>TypeElement.getEnclosedElements</code>方法，获得上面这段代码中<code>Foo</code>类的字段、构造器以及方法。</p> <p>我们也可以通过<code>ExecutableElement.getParameters</code>方法，获得<code>setA</code>方法的参数。具体这些<code>Element</code>类都有哪些 API，你可以参考它们的 Javadoc[3]。</p> <p>在将该注解处理器编译成 class 文件后，我们便可以将其注册为 Java 编译器的插件，并用来处理其他源代码。注册的方法主要有两种。第一种是直接使用 javac 命令的<code>-processor</code>参数，如下所示：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ javac -cp /CLASSPATH/TO/CheckGetterProcessor -processor bar.CheckGetterProcessor Foo.java
+
+error: Class 'Foo' is annotated as @CheckGetter, but field 'a' is without getter
+
+1 error
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>第二种则是将注解处理器编译生成的 class 文件压缩入 jar 包中，并在 jar 包的配置文件中记录该注解处理器的包名及类名，即<code>bar.CheckGetterProcessor</code>。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+（具体路径及配置文件名为`META-INF/services/javax.annotation.processing.Processor`）
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>当启动 Java 编译器时，它会寻找 classpath 路径上的 jar 包是否包含上述配置文件，并自动注册其中记录的注解处理器。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+$ javac -cp /PATH/TO/CheckGetterProcessor.jar Foo.java
+
+error: Class 'Foo' is annotated as @CheckGetter, but field 'a' is without getter
+
+1 error
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>此外，我们还可以在 IDE 中配置注解处理器。这里我就不过多演示了，感兴趣的同学可以自行搜索。</p> <h2 id="利用注解处理器生成源代码"><a href="#利用注解处理器生成源代码" class="header-anchor">#</a> 利用注解处理器生成源代码</h2> <p>前面提到，注解处理器可以用来修改已有源代码或者生成源代码。</p> <p>确切地说，注解处理器并不能真正地修改已有源代码。这里指的是修改由 Java 源代码生成的抽象语法树，在其中修改已有树节点或者插入新的树节点，从而使生成的字节码发生变化。</p> <p>对抽象语法树的修改涉及了 Java 编译器的内部 API，这部分很可能随着版本变更而失效。因此，我并不推荐这种修改方式。</p> <p>如果你感兴趣的话，可以参考 [Project Lombok][4]。这个项目自定义了一系列注解，并根据注解的内容来修改已有的源代码。例如它提供了<code>@Getter</code>和<code>@Setter</code>注解，能够为程序自动添加<code>getter</code>以及<code>setter</code>方法。有关对使用内部 API 的讨论，你可以参考 [这篇博客][5]，以及 [Lombok 的回应][6]。</p> <p>用注解处理器来生成源代码则比较常用。我们以前介绍过的压力测试 jcstress，以及接下来即将介绍的 JMH 工具，都是依赖这种方式来生成测试代码的。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package foo;
+
+ 
+
+import java.lang.annotation.*;
+
+ 
+
+@Target(ElementType.METHOD)
+
+@Retention(RetentionPolicy.SOURCE)
+
+public @interface Adapt {
+
+  Class&lt;?&gt; value();
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>在上面这段代码中，我定义了一个注解<code>@Adapt</code>。这个注解将接收一个<code>Class</code>类型的参数<code>value</code>（如果注解类仅包含一个名为<code>value</code>的参数时，那么在使用注解时，我们可以省略<code>value=</code>），具体用法如这段代码所示。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+// Bar.java
+
+package test;
+
+import java.util.function.IntBinaryOperator;
+
+import foo.Adapt;
+
+ 
+
+public class Bar {
+
+  @Adapt(IntBinaryOperator.class)
+
+  public static int add(int a, int b) {
+
+    return a + b;
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>接下来，我们来实现一个处理<code>@Adapt</code>注解的处理器。该处理器将生成一个新的源文件，实现参数<code>value</code>所指定的接口，并且调用至被该注解所标注的方法之中。具体的实现代码比较长，建议你在<a href="https://time.geekbang.org/column/108" target="_blank" rel="noopener noreferrer">网页端<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>观看。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package bar;
+
+ 
+
+import java.io.*;
+
+import java.util.Set;
+
+ 
+
+import javax.annotation.processing.*;
+
+import javax.lang.model.SourceVersion;
+
+import javax.lang.model.element.*;
+
+import javax.lang.model.type.TypeMirror;
+
+import javax.lang.model.util.ElementFilter;
+
+import javax.tools.JavaFileObject;
+
+ 
+
+import javax.tools.Diagnostic.Kind;
+
+ 
+
+@SupportedAnnotationTypes(&quot;foo.Adapt&quot;)
+
+@SupportedSourceVersion(SourceVersion.RELEASE_10)
+
+public class AdaptProcessor extends AbstractProcessor {
+
+ 
+
+  @Override
+
+  public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) {
+
+    for (TypeElement annotation : annotations) {
+
+      if (!&quot;foo.Adapt&quot;.equals(annotation.getQualifiedName().toString())) {
+
+        continue;
+
+      }
+
+ 
+
+      ExecutableElement targetAsKey = getExecutable(annotation, &quot;value&quot;);
+
+ 
+
+      for (ExecutableElement annotatedMethod : ElementFilter.methodsIn(roundEnv.getElementsAnnotatedWith(annotation))) {
+
+        if (!annotatedMethod.getModifiers().contains(Modifier.PUBLIC)) {
+
+          processingEnv.getMessager().printMessage(Kind.ERROR, &quot;@Adapt on non-public method&quot;);
+
+          continue;
+
+        }
+
+        if (!annotatedMethod.getModifiers().contains(Modifier.STATIC)) {
+
+          // TODO support non-static methods
+
+          continue;
+
+        }
+
+ 
+
+        TypeElement targetInterface = getAnnotationValueAsTypeElement(annotatedMethod, annotation, targetAsKey);
+
+        if (targetInterface.getKind() != ElementKind.INTERFACE) {
+
+          processingEnv.getMessager().printMessage(Kind.ERROR, &quot;@Adapt with non-interface input&quot;);
+
+          continue;
+
+        }
+
+ 
+
+        TypeElement enclosingType = getTopLevelEnclosingType(annotatedMethod);
+
+        createAdapter(enclosingType, annotatedMethod, targetInterface);
+
+      }
+
+    }
+
+    return true;
+
+  }
+
+ 
+
+  private void createAdapter(TypeElement enclosingClass, ExecutableElement annotatedMethod,
+
+      TypeElement targetInterface) {
+
+    PackageElement packageElement = (PackageElement) enclosingClass.getEnclosingElement();
+
+    String packageName = packageElement.getQualifiedName().toString();
+
+    String className = enclosingClass.getSimpleName().toString();
+
+    String methodName = annotatedMethod.getSimpleName().toString();
+
+    String adapterName = className + &quot;_&quot; + methodName + &quot;Adapter&quot;;
+
+ 
+
+    ExecutableElement overriddenMethod = getFirstNonDefaultExecutable(targetInterface);
+
+ 
+
+    try {
+
+      Filer filer = processingEnv.getFiler();
+
+      JavaFileObject sourceFile = filer.createSourceFile(packageName + &quot;.&quot; + adapterName, new Element[0]);
+
+ 
+
+      try (PrintWriter out = new PrintWriter(sourceFile.openWriter())) {
+
+        out.println(&quot;package &quot; + packageName + &quot;;&quot;);
+
+        out.println(&quot;import &quot; + targetInterface.getQualifiedName() + &quot;;&quot;);
+
+        out.println();
+
+        out.println(&quot;public class &quot; + adapterName + &quot; implements &quot; + targetInterface.getSimpleName() + &quot; {&quot;);
+
+        out.println(&quot;  @Override&quot;);
+
+        out.println(&quot;  public &quot; + overriddenMethod.getReturnType() + &quot; &quot; + overriddenMethod.getSimpleName()
+
+            + formatParameter(overriddenMethod, true) + &quot; {&quot;);
+
+        out.println(&quot;    return &quot; + className + &quot;.&quot; + methodName + formatParameter(overriddenMethod, false) + &quot;;&quot;);
+
+        out.println(&quot;  }&quot;);
+
+        out.println(&quot;}&quot;);
+
+      }
+
+    } catch (IOException e) {
+
+      throw new RuntimeException(e);
+
+    }
+
+  }
+
+ 
+
+  private ExecutableElement getExecutable(TypeElement annotation, String methodName) {
+
+    for (ExecutableElement method : ElementFilter.methodsIn(annotation.getEnclosedElements())) {
+
+      if (methodName.equals(method.getSimpleName().toString())) {
+
+        return method;
+
+      }
+
+    }
+
+    processingEnv.getMessager().printMessage(Kind.ERROR, &quot;Incompatible @Adapt.&quot;);
+
+    return null;
+
+  }
+
+ 
+
+  private ExecutableElement getFirstNonDefaultExecutable(TypeElement annotation) {
+
+    for (ExecutableElement method : ElementFilter.methodsIn(annotation.getEnclosedElements())) {
+
+      if (!method.isDefault()) {
+
+        return method;
+
+      }
+
+    }
+
+    processingEnv.getMessager().printMessage(Kind.ERROR,
+
+        &quot;Target interface should declare at least one non-default method.&quot;);
+
+    return null;
+
+  }
+
+ 
+
+  private TypeElement getAnnotationValueAsTypeElement(ExecutableElement annotatedMethod, TypeElement annotation,
+
+      ExecutableElement annotationFunction) {
+
+    TypeMirror annotationType = annotation.asType();
+
+ 
+
+    for (AnnotationMirror annotationMirror : annotatedMethod.getAnnotationMirrors()) {
+
+      if (processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), annotationType)) {
+
+        AnnotationValue value = annotationMirror.getElementValues().get(annotationFunction);
+
+        if (value == null) {
+
+          processingEnv.getMessager().printMessage(Kind.ERROR, &quot;Unknown @Adapt target&quot;);
+
+          continue;
+
+        }
+
+        TypeMirror targetInterfaceTypeMirror = (TypeMirror) value.getValue();
+
+        return (TypeElement) processingEnv.getTypeUtils().asElement(targetInterfaceTypeMirror);
+
+      }
+
+    }
+
+    processingEnv.getMessager().printMessage(Kind.ERROR, &quot;@Adapt should contain target()&quot;);
+
+    return null;
+
+  }
+
+ 
+
+  private TypeElement getTopLevelEnclosingType(ExecutableElement annotatedMethod) {
+
+    TypeElement enclosingType = null;
+
+    Element enclosing = annotatedMethod.getEnclosingElement();
+
+ 
+
+    while (enclosing != null) {
+
+      if (enclosing.getKind() == ElementKind.CLASS) {
+
+        enclosingType = (TypeElement) enclosing;
+
+      } else if (enclosing.getKind() == ElementKind.PACKAGE) {
+
+        break;
+
+      }
+
+      enclosing = enclosing.getEnclosingElement();
+
+    }
+
+    return enclosingType;
+
+  }
+
+ 
+
+  private String formatParameter(ExecutableElement method, boolean includeType) {
+
+    StringBuilder builder = new StringBuilder();
+
+    builder.append('(');
+
+    String separator = &quot;&quot;;
+
+ 
+
+    for (VariableElement parameter : method.getParameters()) {
+
+      builder.append(separator);
+
+      if (includeType) {
+
+        builder.append(parameter.asType());
+
+        builder.append(' ');
+
+      }
+
+      builder.append(parameter.getSimpleName());
+
+      separator = &quot;, &quot;;
+
+    }
+
+    builder.append(')');
+
+    return builder.toString();
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br><span class="line-number">209</span><br><span class="line-number">210</span><br><span class="line-number">211</span><br><span class="line-number">212</span><br><span class="line-number">213</span><br><span class="line-number">214</span><br><span class="line-number">215</span><br><span class="line-number">216</span><br><span class="line-number">217</span><br><span class="line-number">218</span><br><span class="line-number">219</span><br><span class="line-number">220</span><br><span class="line-number">221</span><br><span class="line-number">222</span><br><span class="line-number">223</span><br><span class="line-number">224</span><br><span class="line-number">225</span><br><span class="line-number">226</span><br><span class="line-number">227</span><br><span class="line-number">228</span><br><span class="line-number">229</span><br><span class="line-number">230</span><br><span class="line-number">231</span><br><span class="line-number">232</span><br><span class="line-number">233</span><br><span class="line-number">234</span><br><span class="line-number">235</span><br><span class="line-number">236</span><br><span class="line-number">237</span><br><span class="line-number">238</span><br><span class="line-number">239</span><br><span class="line-number">240</span><br><span class="line-number">241</span><br><span class="line-number">242</span><br><span class="line-number">243</span><br><span class="line-number">244</span><br><span class="line-number">245</span><br><span class="line-number">246</span><br><span class="line-number">247</span><br><span class="line-number">248</span><br><span class="line-number">249</span><br><span class="line-number">250</span><br><span class="line-number">251</span><br><span class="line-number">252</span><br><span class="line-number">253</span><br><span class="line-number">254</span><br><span class="line-number">255</span><br><span class="line-number">256</span><br><span class="line-number">257</span><br><span class="line-number">258</span><br><span class="line-number">259</span><br><span class="line-number">260</span><br><span class="line-number">261</span><br><span class="line-number">262</span><br><span class="line-number">263</span><br><span class="line-number">264</span><br><span class="line-number">265</span><br><span class="line-number">266</span><br><span class="line-number">267</span><br><span class="line-number">268</span><br><span class="line-number">269</span><br><span class="line-number">270</span><br><span class="line-number">271</span><br><span class="line-number">272</span><br><span class="line-number">273</span><br><span class="line-number">274</span><br><span class="line-number">275</span><br><span class="line-number">276</span><br><span class="line-number">277</span><br><span class="line-number">278</span><br><span class="line-number">279</span><br><span class="line-number">280</span><br><span class="line-number">281</span><br><span class="line-number">282</span><br><span class="line-number">283</span><br><span class="line-number">284</span><br><span class="line-number">285</span><br><span class="line-number">286</span><br><span class="line-number">287</span><br><span class="line-number">288</span><br><span class="line-number">289</span><br><span class="line-number">290</span><br><span class="line-number">291</span><br><span class="line-number">292</span><br><span class="line-number">293</span><br><span class="line-number">294</span><br><span class="line-number">295</span><br><span class="line-number">296</span><br><span class="line-number">297</span><br><span class="line-number">298</span><br><span class="line-number">299</span><br><span class="line-number">300</span><br><span class="line-number">301</span><br><span class="line-number">302</span><br><span class="line-number">303</span><br><span class="line-number">304</span><br><span class="line-number">305</span><br><span class="line-number">306</span><br><span class="line-number">307</span><br><span class="line-number">308</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br><span class="line-number">209</span><br><span class="line-number">210</span><br><span class="line-number">211</span><br><span class="line-number">212</span><br><span class="line-number">213</span><br><span class="line-number">214</span><br><span class="line-number">215</span><br><span class="line-number">216</span><br><span class="line-number">217</span><br><span class="line-number">218</span><br><span class="line-number">219</span><br><span class="line-number">220</span><br><span class="line-number">221</span><br><span class="line-number">222</span><br><span class="line-number">223</span><br><span class="line-number">224</span><br><span class="line-number">225</span><br><span class="line-number">226</span><br><span class="line-number">227</span><br><span class="line-number">228</span><br><span class="line-number">229</span><br><span class="line-number">230</span><br><span class="line-number">231</span><br><span class="line-number">232</span><br><span class="line-number">233</span><br><span class="line-number">234</span><br><span class="line-number">235</span><br><span class="line-number">236</span><br><span class="line-number">237</span><br><span class="line-number">238</span><br><span class="line-number">239</span><br><span class="line-number">240</span><br><span class="line-number">241</span><br><span class="line-number">242</span><br><span class="line-number">243</span><br><span class="line-number">244</span><br><span class="line-number">245</span><br><span class="line-number">246</span><br><span class="line-number">247</span><br><span class="line-number">248</span><br><span class="line-number">249</span><br><span class="line-number">250</span><br><span class="line-number">251</span><br><span class="line-number">252</span><br><span class="line-number">253</span><br><span class="line-number">254</span><br><span class="line-number">255</span><br><span class="line-number">256</span><br><span class="line-number">257</span><br><span class="line-number">258</span><br><span class="line-number">259</span><br><span class="line-number">260</span><br><span class="line-number">261</span><br><span class="line-number">262</span><br><span class="line-number">263</span><br><span class="line-number">264</span><br><span class="line-number">265</span><br><span class="line-number">266</span><br><span class="line-number">267</span><br><span class="line-number">268</span><br><span class="line-number">269</span><br><span class="line-number">270</span><br><span class="line-number">271</span><br><span class="line-number">272</span><br><span class="line-number">273</span><br><span class="line-number">274</span><br><span class="line-number">275</span><br><span class="line-number">276</span><br><span class="line-number">277</span><br><span class="line-number">278</span><br><span class="line-number">279</span><br><span class="line-number">280</span><br><span class="line-number">281</span><br><span class="line-number">282</span><br><span class="line-number">283</span><br><span class="line-number">284</span><br><span class="line-number">285</span><br><span class="line-number">286</span><br><span class="line-number">287</span><br><span class="line-number">288</span><br><span class="line-number">289</span><br><span class="line-number">290</span><br><span class="line-number">291</span><br><span class="line-number">292</span><br><span class="line-number">293</span><br><span class="line-number">294</span><br><span class="line-number">295</span><br><span class="line-number">296</span><br><span class="line-number">297</span><br><span class="line-number">298</span><br><span class="line-number">299</span><br><span class="line-number">300</span><br><span class="line-number">301</span><br><span class="line-number">302</span><br><span class="line-number">303</span><br><span class="line-number">304</span><br><span class="line-number">305</span><br><span class="line-number">306</span><br><span class="line-number">307</span><br><span class="line-number">308</span><br></div></div><p>在这个注解处理器实现中，我们将读取注解中的值，因此我将使用<code>process</code>方法的第一个参数，并通过它获得被标注方法对应的<code>@Adapt</code>注解中的<code>value</code>值。</p> <p>之所以采用这种麻烦的方式，是因为<code>value</code>值属于<code>Class</code>类型。在编译过程中，被编译代码中的<code>Class</code>常量未必被加载进 Java 编译器所在的虚拟机中。因此，我们需要通过<code>process</code>方法的第一个参数，获得<code>value</code>所指向的接口的抽象语法树，并据此生成源代码。</p> <p>生成源代码的方式实际上非常容易理解。我们可以通过<code>Filer.createSourceFile</code>方法获得一个类似于文件的概念，并通过<code>PrintWriter</code>将具体的内容一一写入即可。</p> <p>当将该注解处理器作为插件接入 Java 编译器时，编译前面的<code>test/Bar.java</code>将生成下述代码，并且触发新一轮的编译。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>
+package test;
+
+import java.util.function.IntBinaryOperator;
+
+ 
+
+public class Bar_addAdapter implements IntBinaryOperator {
+
+  @Override
+
+  public int applyAsInt(int arg0, int arg1) {
+
+    return Bar.add(arg0, arg1);
+
+  }
+
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><blockquote><p>注意，该注解处理器没有处理所编译的代码包名为空的情况。</p></blockquote> <h2 id="总结与实践"><a href="#总结与实践" class="header-anchor">#</a> 总结与实践</h2> <p>今天我介绍了 Java 编译器的注解处理器。</p> <p>注解处理器主要有三个用途。一是定义编译规则，并检查被编译的源文件。二是修改已有源代码。三是生成新的源代码。其中，第二种涉及了 Java  编译器的内部 API，因此并不推荐。第三种较为常见，是 OpenJDK 工具 jcstress，以及 JMH 生成测试代码的方式。</p> <p>Java 源代码的编译过程可分为三个步骤，分别为解析源文件生成抽象语法树，调用已注册的注解处理器，和生成字节码。如果在第 2 步中，注解处理器生成了新的源代码，那么 Java 编译器将重复第 1、2 步，直至不再生成新的源代码。</p> <hr> <p>今天的实践环节，请实现本文的案例<code>CheckGetterProcessor</code>中的 TODO 项，处理由<code>@CheckGetter</code>注解的字段。</p> <p>[1] http://openjdk.java.net/groups/compiler/doc/compilation-overview/index.html
+[2] http://hannesdorfmann.com/annotation-processing/annotationprocessing101
+[3] https://docs.oracle.com/javase/10/docs/api/javax/lang/model/element/package-summary.html
+[4] https://projectlombok.org/
+[5] http://notatube.blogspot.com/2010/11/project-lombok-trick-explained.html
+[6] http://jnb.ociweb.com/jnb/jnbJan2010.html#controversy</p> <h2 id="精选留言-14"><a href="#精选留言-14" class="header-anchor">#</a> 精选留言(14)</h2> <ul><li></li></ul> <p>聚变</p> <p>2018-09-21</p> <p>4</p> <p>编译时生成与 运行时使用cglib等类库生成的字节码,在性能和使用场景上有什么区别吗??</p> <p>作者回复: Cglib等字节码工具会影响启动性能，峰值性能上没啥区别。</p> <p>如果对字节码不熟的话，用注解处理器比较容易些。另一方面，字节码处理工具更强大些，能做很多源代码不能做的。</p> <ul><li></li></ul> <p>lovedebug</p> <p>2018-09-27</p> <p>2</p> <p>讲的很好，赞。结合java语法看印象更深</p> <ul><li></li></ul> <p>奇奇</p> <p>2019-04-25</p> <p>1</p> <p>老师，这个 ExecutableElement targetAsKey = getExecutable(annotation, &quot;value&quot;); 这一句是干嘛的，我看语义是找出所有名字是value的方法？难道不应该找的是value所指向的类吗？</p> <ul><li></li></ul> <p>白三岁</p> <p>2018-09-28</p> <p>1</p> <p>spring中的那些注解也是通过注解处理器实现的吗。我们项目中一般好像都是通过spring的aop来实现自定义注解的功能。</p> <ul><li></li></ul> <p>godtrue</p> <p>2018-09-24</p> <p>1</p> <p>嗯，之前写过注解方面的功能，不过虽然能自定义注解，也能明白Java语言层面的有关注解相关的知识点，但是往下怎么样就不太清楚了？
+注解代码本质也是代码，也会被编译为.class文件，然后在JVM上面被转换成机器码，然后被计算机执行，不过感觉他好特别，他的存在仅是为了是编码更简洁吗？
+读之前我就在想上面的问题，文中虽然没有介绍这些内容，不过介绍了其他的内容也挺好！</p> <p>小结一下：
+1：注解处理器-本质也是代码，以插件的形式存在，以插件的形式接入Java编译器，这些插件有什么用呢？</p> <p>2：注解处理器的作用？
+注解处理器有三个作用
+2-1：可以为Java编译器添加一些编译规则，这也就是传说中的自定义注解，它可以定义一些编译规则，这些编译规则会以插件的形式提供给Java编译器。
+2-2：可以修改已有的JAVA源文件（不推荐，为什么呢？因为本质上注解处理器不能修改已有的JAVA源代码，但是它可以修改有java源代码生成的抽象语法树，从而使生成的字节码发生变化，不过对抽象语法树的修改修改设计了java编译器的内部API，这部分很可能随着版本的变更而失效，所以，才不推荐使用的，存在埋深坑的隐患。）
+2-3：可以生成一些新的JAVA源文件</p> <p>3：元注解-给注解使用的注解就是元注解，这些注解是JDK的开发人员提前定义了的，也同样是以插件的形式接入Java编译器的。注意：所有的注解处理器都必须实现Processor接口，这个接口中有四个方法，每个方法都有其特殊的作用在，详情需要回头细看。另外，JDK提供了一个实现Processor接口的抽象类AbstractProcessor，这个抽象类实现了Processor接口的其中三个方法。</p> <p>4：自定义的注解被编译为.class文件后，便可以将其注册为Java编译器的插件了，注册方法有两种，祥看专栏内容吧！</p> <p>5：Java源代码的编译过程分为三个步骤
+5-1：解析源文件生成抽象语法树
+5-2：调用已注册的注解处理器（注解处理器有两种注册到JAVA编译器的方式）
+5-3：生成字节码
+5-4：如果5-2步中，注解处理器生成了新的源代码，那么JAVA编译器将重复第5-1/5-2步，直到不再生成新的源代码。</p> <p>作者回复: 注解相当于给某些代码贴了个标签。我们既可以通过注解处理器在编译时解析这些标签，也可以在运行时通过反射解析这些标签。解析后都会有一系列动作，这些动作就是对标签语义的诠释。</p> <ul><li></li></ul> <p>小美</p> <p>2018-09-23</p> <p>1</p> <p>郑老师  有个问题我一直想不明白?java 源码生成语法树 java APT 处理器处理后生成代码， 从新走那个过程  有重复生成了   那不是死循环了吗？可能是自己知识浅薄  麻烦在这点上正老师能指点下☺️  自己水平比较low  模仿了写一直没成功☺️  不知道郑老师能发一个demo 工程吗</p> <ul><li></li></ul> <p>Egos</p> <p>2018-09-22</p> <p>1</p> <p>问一下RetentionPolicy.CLASS 的使用场景。有一些用来生成Java 文件的注解是可以使用SOURCE的，但是用了CLASS。</p> <ul><li></li></ul> <p>补心</p> <p>2018-09-21</p> <p>1</p> <p>Lombok随着Java版本的问题，是不是有可能没法使用。</p> <p>作者回复: 有可能，因为用的是internal API。</p> <ul><li></li></ul> <p>松花皮蛋me</p> <p>2019-03-16</p> <p>反射在运行时，注解解释器在编译时</p> <ul><li></li></ul> <p>孜孜</p> <p>2019-03-12</p> <p>@Getter 和例子自己定义的@CheckGetter 一起使用，@CheckGetter先生效。有点搞不明白Lombok和自己定义的执行顺序。</p> <ul><li></li></ul> <p>金龟</p> <p>2019-01-29</p> <p>CheckGetterProcessor这个是怎么用的？？我感觉我没有运行起来一个类里没有getter方法，我一样能够编译通过。</p> <ul><li></li></ul> <p>山顶的洞</p> <p>2018-12-02</p> <p>自定义注解都是aop实现的吗？好像没看到过注解处理器。</p> <ul><li></li></ul> <p>lewis</p> <p>2018-10-04</p> <p>老师你好，我在使用Annotation  Processor过程中，遇到了一个问题，比如某个Element是一个方法，我想获取这个方法的返回值类型，当这个返回值是泛型的时候，无法获取全路径的类型；比如返回值是自定义类型com.xxx.module.domain.UserInfo这个类型，通过下面的语句只能知道返回值是字面量UserInfo,而不是com.xxx.module.domain.UserInfo这个全路径类型 。
+ExecutableElement methodElement = ExecutableElement.class.cast(element);
+TypeMirror returnType = methodElement.getReturnType();
+TypeName returnTypeName = ClassName.get(returnType);
+这个returnTypeName只是UserInfo,不是com.xxx.module.domain.UserInfo，拿不到UserInfo的包路径信息，通过messager提示说是找不到com.xxx.module.domain这个包，请老师指导</p> <ul><li></li></ul> <p>蒋宏飞</p> <p>2018-09-22</p> <p>不错哦</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">8/17/2022, 11:15:50 PM</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/3c48b1/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">向量化</div></a> <a href="/pages/a5ec55/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">基准测试框架JMH（上）</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/3c48b1/" class="prev">向量化</a></span> <span class="next"><a href="/pages/a5ec55/">基准测试框架JMH（上）</a>→
+      </span></p></div></div></div> <!----></main></div> <div class="footer"><div class="icons"><a href="https://github.com/ily55421" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="mailto:ily55421@163.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://gitee.com/ily55421" title="Gitee" target="_blank" class="iconfont icon-gitee"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>ily55421 </span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.fb9867b2.js" defer></script><script src="/assets/js/4.0b71a357.js" defer></script><script src="/assets/js/58.a8c06b55.js" defer></script>
+  </body>
+</html>
