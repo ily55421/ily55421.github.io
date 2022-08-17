@@ -19,15 +19,15 @@
     "segmentit": "^2.0.3",
     "vuepress": "1.8.0",
     "vuepress-plugin-fulltext-search": "^2.2.1",
-    "vuepress-plugin-md-enhance": "^1.30.0",
+    "vuepress-plugin-md-enhance": "^1.28.5",
     "vuepress-plugin-one-click-copy": "^1.0.2",
     "vuepress-plugin-zooming": "^1.1.7",
-    "vuepress-theme-vdoing": "^1.12.0",
+    "vuepress-theme-vdoing": "^1.12.7",
     "yamljs": "^0.3.0"
   },
   "dependencies": {
     "busuanzi.pure.js": "^1.0.3",
-    "leancloud-storage": "^4.11.1",
+    "leancloud-storage": "^4.13.1",
     "vuepress-plugin-vssue-global": "^0.0.3"
   }
 }
