@@ -94,7 +94,7 @@ module.exports = [
       items: [
         { text: 'ldapdoc', link: 'http://ldapdoc.eryajf.net' },
         { text: 'HowToStartOpenSource', link: 'https://eryajf.github.io/HowToStartOpenSource' },
-        { text: 'vdoing-template', link: 'https://eryajf.github.io/vdoing-template/' },
+        { text: 'lql-notes', link: 'https://eryajf.github.io/lql-notes/' },
       ]
     }
   ],
