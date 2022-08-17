@@ -1,10 +1,10 @@
 # npm
 package-lock.json
 node_modules
-report.*
+
 # yarn
 yarn.lock
-yar-error.log
+
 # vscode
 .vscode
 
@@ -16,3 +16,4 @@ urls.txt
 
 # mac
 .DS_Store
+yarn-error.log
