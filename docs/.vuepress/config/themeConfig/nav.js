@@ -31,10 +31,17 @@ module.exports = [
     text: '编程', link: '/code/',
 
     items: [
-      { text: '最佳实践', link: '/pages/cc7034/' },
+      { text: 'JAVA', link: '/pages/ace3fe/' },
 
     ]
   },
+  { text: '索引', link: '/categories/',
+  items: [
+    { text: '分类', link: '/categories/' },
+    { text: '标签', link: '/tags/' },
+    { text: '归档', link: '/archives/' },
+  ],
+},
   { text: '留言板', link: '/message-board/' },
   { text: '我的博客', link: 'https://ily55421.github.io' },
 ]
