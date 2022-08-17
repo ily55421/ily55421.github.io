@@ -32,7 +32,14 @@ module.exports = [
 
     items: [
       { text: 'JAVA', link: '/pages/ace3fe/' },
-
+      { text: 'JVM', link: '/pages/f2e80b//' ,
+      items: [
+        { text: 'Java虚拟机基本原理', link: '/pages/f2e80b/'} ,
+        { text: '高效编译', link: '/pages/bf46c5/'} ,
+        { text: '代码优化', link: '/pages/1261df/'} ,
+      ]
+    },
+      
     ]
   },
   { text: '索引', link: '/categories/',
