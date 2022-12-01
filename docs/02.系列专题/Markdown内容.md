@@ -5,7 +5,7 @@ categories:
 tags: 
   - null
 date: 2022-12-01 22:46:03
-permalink: /pages/541d98/
+permalink: /pages/a4770e/
 ---
 
 这里是 two-test-1 的内容。
