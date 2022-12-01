@@ -11,7 +11,17 @@ module.exports = {
     lineNumbers: true, // 代码行号
     extractHeaders: [ 'h2', 'h3', 'h4', 'h5', 'h6' ],//使目录栏支持h2~h6标题
   },
-
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto"
+        }
+      ] 
+    }
+  },
   head,
   plugins,
   themeConfig,
