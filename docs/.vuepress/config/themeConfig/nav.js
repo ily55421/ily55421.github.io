@@ -7,6 +7,7 @@ module.exports = [
     items: [
       { text: '算法', link: '/pages/24768e/' },
       { text: '数据结构', link: '/pages/24770e/' },
+      { text: '刷题', link: '/pages/040924/' },
      ]
 
 
